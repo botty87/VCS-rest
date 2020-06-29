@@ -64,7 +64,6 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql:42.2.12'
 
     implementation 'com.google.firebase:firebase-admin:6.13.0'
-    implementation 'com.google.firebase:firebase-admin:6.13.0'
     implementation "org.koin:koin-ktor:$koin_version"
 }
 

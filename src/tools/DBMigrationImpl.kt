@@ -1,9 +1,9 @@
 package com.vcs.tools
 
-import sources.localDB.dictionary.DictionaryController
 import com.vcs.sources.firestore.*
 import com.vcs.sources.localDB.areas.AreasController
 import com.vcs.sources.localDB.depots.DepotsController
+import com.vcs.sources.localDB.dictionary.DictionaryController
 import com.vcs.sources.localDB.referencedTables.areasCalendar.AreasCalendarController
 import com.vcs.sources.localDB.referencedTables.areasTrashContainers.AreasTrashContainersController
 import com.vcs.sources.localDB.retires.RetiresController
@@ -53,6 +53,7 @@ class DBMigrationImpl: DBMigration, KoinComponent {
     private fun clearLocalDB() {
         areasTrashContainersController.clear()
         areasCalendarController.clear()
+        trashContainersController.clear()
         areasController.clear()
         depotsController.clear()
         dictionaryController.clear()

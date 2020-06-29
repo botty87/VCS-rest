@@ -2,7 +2,6 @@ package com.vcs.sources.localDB.dictionary
 
 import com.vcs.data.firestoreDB.DictionaryItemFS
 import com.vcs.data.localDB.DictionaryItem
-import sources.localDB.dictionary.DictionaryController
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 

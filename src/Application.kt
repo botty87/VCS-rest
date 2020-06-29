@@ -7,10 +7,10 @@ import com.vcs.di.controllersModule
 import com.vcs.di.toolsModule
 import com.vcs.sources.localDB.depots.Depots
 import com.vcs.sources.localDB.dictionary.Dictionary
-import sources.localDB.dictionary.DictionaryController
 import com.vcs.sources.localDB.areas.Areas
 import com.vcs.sources.localDB.areas.AreasController
 import com.vcs.sources.localDB.depots.DepotsController
+import com.vcs.sources.localDB.dictionary.DictionaryController
 import com.vcs.sources.localDB.referencedTables.areasCalendar.AreasCalendar
 import com.vcs.sources.localDB.referencedTables.areasTrashContainers.AreasTrashContainers
 import com.vcs.sources.localDB.retires.Retires
@@ -67,6 +67,13 @@ fun Application.module() {
             call.respondText(dbMigration.fromFirestoreToLocal())
         }
 
+        get("/init") {
+            transaction {
+                SchemaUtils.create(Dictionary, Depots, Retires, Areas, AreasCalendar, TrashContainers, AreasTrashContainers)
+            }
+            call.respondText("Tables created")
+        }
+
         get("/dictionary") {
             val dictionary = dictionaryController.getAll().map { DictionaryItemJson(it) }
             call.respond(dictionary)
@@ -98,8 +105,4 @@ private fun initDB() {
     val config = HikariConfig("/hikari.properties")
     val ds = HikariDataSource(config)
     Database.connect(ds)
-
-    transaction {
-        SchemaUtils.create(Dictionary, Depots, Retires, Areas, AreasCalendar, TrashContainers, AreasTrashContainers)
-    }
 }

@@ -1,4 +1,4 @@
-package sources.localDB.dictionary
+package com.vcs.sources.localDB.dictionary
 
 import com.vcs.data.firestoreDB.DictionaryItemFS
 import com.vcs.data.localDB.DictionaryItem

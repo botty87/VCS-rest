@@ -1,7 +1,6 @@
 package com.vcs
 
 import com.vcs.data.json.*
-import com.vcs.data.localDB.TrashContainerItem
 import com.vcs.di.firebaseModule
 import com.vcs.di.controllersModule
 import com.vcs.di.toolsModule

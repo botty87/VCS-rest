@@ -20,7 +20,8 @@ class AreasCalendarControllerImpl: AreasCalendarController {
         AreaCalendarItem.new {
             area = areaItem
             retire = retireItem
-            this.weekDay = WeekDayConverter.fromStringTag(weekDayString).ordinal.toByte()
+            //Add 1 because different app weekday order
+            this.weekDay = (WeekDayConverter.fromStringTag(weekDayString).ordinal + 1).toByte()
         }
     }
 

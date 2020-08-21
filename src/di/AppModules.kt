@@ -15,8 +15,6 @@ import com.vcs.sources.localDB.retires.RetiresController
 import com.vcs.sources.localDB.retires.RetiresControllerImpl
 import com.vcs.sources.localDB.trashContainers.TrashContainersController
 import com.vcs.sources.localDB.trashContainers.TrashContainersControllerImpl
-import com.vcs.tools.DBMigration
-import com.vcs.tools.DBMigrationImpl
 import org.koin.dsl.module
 
 val firebaseModule = module {
@@ -36,8 +34,4 @@ val controllersModule = module {
     single<AreasCalendarController> { AreasCalendarControllerImpl() }
     single<TrashContainersController> { TrashContainersControllerImpl() }
     single<AreasTrashContainersController> {AreasTrashContainersControllerImpl() }
-}
-
-val toolsModule = module {
-    single<DBMigration> { DBMigrationImpl() }
 }

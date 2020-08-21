@@ -4,11 +4,11 @@ import com.vcs.data.base.RetireItemBase
 import com.vcs.data.localDB.RetireItem
 import java.time.LocalDate
 
-class RetireItemJson(retireItem: RetireItem): RetireItemBase {
-    val id = retireItem.id.value
-    override var freq: Byte = retireItem.freq
-    override var startDate: LocalDate? = retireItem.startDate
-    override var time: Byte = retireItem.time
-    override var type: Byte = retireItem.type
-    override var name: String = retireItem.name
+class RetireItemJson(retireItem: RetireItem?) : RetireItemBase {
+    var id: Int = retireItem?.id?.value ?: 0
+    override var freq: Byte = retireItem?.freq ?: 0
+    override var startDate: LocalDate? = retireItem?.startDate
+    override var time: Byte = retireItem?.time ?: 0
+    override var type: Byte = retireItem?.type ?: 0
+    override var name: String = retireItem?.name ?: ""
 }

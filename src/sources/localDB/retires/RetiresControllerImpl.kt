@@ -1,9 +1,9 @@
 package com.vcs.sources.localDB.retires
 
-import com.vcs.data.base.RetireItemBase
-import com.vcs.data.firestoreDB.RetireItemFS
+import com.vcs.data.PostResult
+import com.vcs.data.json.RetireItemJson
 import com.vcs.data.localDB.RetireItem
-import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.ZoneId
 
@@ -20,34 +20,33 @@ class RetiresControllerImpl: RetiresController {
         }
     }
 
-    override fun clear() {
-        transaction {
-            Retires.deleteAll()
+    override fun createNew(retireItemJson: RetireItemJson): RetireItem {
+        return transaction {
+            RetireItem.new {
+                freq = retireItemJson.freq
+                time = retireItemJson.time
+                type = retireItemJson.type
+                name = retireItemJson.name
+                startDate = retireItemJson.startDate
+            }
         }
     }
 
-    override fun putFS(itemsFS: List<RetireItemFS>) {
-        fun RetireItemFS.getTypeID(): Byte {
-            return when(type) {
-                "car" -> RetireItemBase.PAPER
-                "mul" -> RetireItemBase.MULTI
-                "pla" -> RetireItemBase.PLASTIC
-                "vet" -> RetireItemBase.GLASS
-                "umi" -> RetireItemBase.ORGANIC
-                else -> RetireItemBase.WASTE
+    override fun update(retireItemJson: RetireItemJson): RetireItem {
+        return transaction {
+            RetireItem[retireItemJson.id].apply {
+                freq = retireItemJson.freq
+                time = retireItemJson.time
+                type = retireItemJson.type
+                name = retireItemJson.name
+                startDate = retireItemJson.startDate
             }
         }
+    }
 
+    override fun delete(id: Int) {
         transaction {
-            itemsFS.forEach { item ->
-                RetireItem.new {
-                    freq = item.freq.toByte()
-                    time = item.time.toByte()
-                    type = item.getTypeID()
-                    name = item.name
-                    startDate = item.startDate?.toDate()?.toInstant()?.atZone(ZoneId.of(zone))?.toLocalDate()
-                }
-            }
+            RetireItem[id].delete()
         }
     }
 }

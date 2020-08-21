@@ -1,10 +1,11 @@
 package com.vcs.sources.localDB.retires
 
-import com.vcs.data.firestoreDB.RetireItemFS
+import com.vcs.data.json.RetireItemJson
 import com.vcs.data.localDB.RetireItem
 
 interface RetiresController {
     fun getAll(): List<RetireItem>
-    fun clear()
-    fun putFS(itemsFS: List<RetireItemFS>)
+    fun createNew(retireItemJson: RetireItemJson): RetireItem
+    fun update(retireItemJson: RetireItemJson): RetireItem
+    fun delete(id: Int)
 }

@@ -6,7 +6,11 @@ import com.vcs.data.localDB.AreaCalendarItem
 import com.vcs.data.localDB.AreaItem
 import com.vcs.data.localDB.RetireItem
 import com.vcs.tools.WeekDayConverter
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class AreasCalendarControllerImpl: AreasCalendarController {
@@ -16,12 +20,32 @@ class AreasCalendarControllerImpl: AreasCalendarController {
         }
     }
 
+    override fun setAreaRetires(areaItem: AreaItem, retires: Map<Byte, Collection<Int>>) {
+        transaction {
+            AreasCalendar.deleteWhere {
+                AreasCalendar.area eq areaItem.id
+            }
+
+            retires.forEach { dayRetire ->
+                dayRetire.value.forEach { retireId ->
+                    AreaCalendarItem.new {
+                        area = areaItem
+                        weekDay = dayRetire.key
+                        retire = RetireItem[retireId]
+                    }
+                }
+            }
+        }
+    }
+
     override fun addNew(areaItem: AreaItem, retireItem: RetireItem, weekDayString: String) {
-        AreaCalendarItem.new {
-            area = areaItem
-            retire = retireItem
-            //Add 1 because different app weekday order
-            this.weekDay = (WeekDayConverter.fromStringTag(weekDayString).ordinal + 1).toByte()
+        transaction {
+            AreaCalendarItem.new {
+                area = areaItem
+                retire = retireItem
+                //Add 1 because different app weekday order
+                this.weekDay = (WeekDayConverter.fromStringTag(weekDayString).ordinal + 1).toByte()
+            }
         }
     }
 

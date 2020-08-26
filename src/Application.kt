@@ -128,9 +128,23 @@ fun Application.module() {
             call.respond(trashConts)
         }
 
-        get("/areas") {
-            val areas = areasController.getAll().map { AreaItemJson(it) }
-            call.respond(areas)
+        route("/areas") {
+            get() {
+                val areas = areasController.getAll().map { AreaItemJson(it) }
+                call.respond(areas)
+            }
+
+            route("save") {
+                post() {
+                    try {
+                        val areaItemJson = call.receive<AreaItemJson>()
+                        val areaItem = areasController.save(areaItemJson)
+                        call.respond(PostResult.Success(AreaItemJson(areaItem)))
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
+            }
         }
     }
 }

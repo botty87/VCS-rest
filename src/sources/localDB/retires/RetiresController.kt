@@ -7,5 +7,5 @@ interface RetiresController {
     fun getAll(): List<RetireItem>
     fun createNew(retireItemJson: RetireItemJson): RetireItem
     fun update(retireItemJson: RetireItemJson): RetireItem
-    fun delete(id: Int)
+    fun delete(retireItemJson: RetireItemJson)
 }

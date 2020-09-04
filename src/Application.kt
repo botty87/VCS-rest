@@ -70,9 +70,47 @@ fun Application.module() {
             call.respondText("Tables created")
         }
 
-        get("/dictionary") {
-            val dictionary = dictionaryController.getAll().map { DictionaryItemJson(it) }
-            call.respond(dictionary)
+        route("/dictionary") {
+            get() {
+                val dictionary = dictionaryController.getAll().map { DictionaryItemJson(it) }
+                call.respond(dictionary)
+            }
+
+            route("new") {
+                post {
+                    try {
+                        val dictionaryItemJson = call.receive<DictionaryItemJson>()
+                        val dictionaryItem = dictionaryController.createNew(dictionaryItemJson)
+                        call.respond(PostResult.Success(DictionaryItemJson(dictionaryItem)))
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
+            }
+
+            route("update") {
+                post{
+                    try {
+                        val dictionaryItemJson = call.receive<DictionaryItemJson>()
+                        val dictionaryItem = dictionaryController.update(dictionaryItemJson)
+                        call.respond(PostResult.Success(DictionaryItemJson(dictionaryItem)))
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
+            }
+
+            route("delete") {
+                post{
+                    try {
+                        val dictionaryItemJson = call.receive<DictionaryItemJson>()
+                        dictionaryController.delete(dictionaryItemJson)
+                        call.respond(PostResult.Success<Nothing>())
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
+            }
         }
 
         get("/depots") {
@@ -114,7 +152,7 @@ fun Application.module() {
                 post {
                     try {
                         val retireItemJson = call.receive<RetireItemJson>()
-                        retiresController.delete(retireItemJson.id)
+                        retiresController.delete(retireItemJson)
                         call.respond(PostResult.Success<Nothing>())
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))

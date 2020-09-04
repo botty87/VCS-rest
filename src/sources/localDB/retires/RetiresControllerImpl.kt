@@ -44,9 +44,9 @@ class RetiresControllerImpl: RetiresController {
         }
     }
 
-    override fun delete(id: Int) {
+    override fun delete(retireItemJson: RetireItemJson) {
         transaction {
-            RetireItem[id].delete()
+            RetireItem[retireItemJson.id].delete()
         }
     }
 }

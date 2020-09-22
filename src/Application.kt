@@ -22,10 +22,9 @@ import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.features.CallLogging
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
+import io.ktor.features.*
 import io.ktor.gson.gson
+import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -42,6 +41,11 @@ import org.koin.ktor.ext.inject
 
 fun Application.module() {
     initDB()
+    install(CORS) {
+        method(HttpMethod.Get)
+        method(HttpMethod.Post)
+        anyHost()
+    }
     install(DefaultHeaders)
     install(CallLogging)
     install(ContentNegotiation) {

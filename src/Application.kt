@@ -36,6 +36,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import org.koin.core.logger.PrintLogger
 import org.koin.ktor.ext.inject
 
@@ -53,7 +54,7 @@ fun Application.module() {
     }
 
     startKoin {
-        logger(PrintLogger())
+        logger(PrintLogger(Level.NONE))
         modules(
             firebaseModule,
             controllersModule

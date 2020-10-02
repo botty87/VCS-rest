@@ -1,6 +1,5 @@
 package com.vcs.sources.localDB.dictionary
 
-import com.vcs.data.firestoreDB.DictionaryItemFS
 import com.vcs.data.json.DictionaryItemJson
 import com.vcs.data.localDB.DictionaryItem
 import org.jetbrains.exposed.sql.deleteAll
@@ -17,18 +16,6 @@ class DictionaryControllerImpl: DictionaryController {
     override fun clear() {
         transaction {
             Dictionary.deleteAll()
-        }
-    }
-
-    override fun putFS(itemsFS: List<DictionaryItemFS>) {
-        transaction {
-            itemsFS.forEach { item ->
-                DictionaryItem.new {
-                    name = item.name
-                    description = item.description
-                    tagId = item.tagID.toByte()
-                }
-            }
         }
     }
 

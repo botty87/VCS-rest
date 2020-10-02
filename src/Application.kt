@@ -2,8 +2,6 @@ package com.vcs
 
 import com.vcs.data.PostResult
 import com.vcs.data.json.*
-import com.vcs.data.localDB.RetireItem
-import com.vcs.di.firebaseModule
 import com.vcs.di.controllersModule
 import com.vcs.sources.localDB.depots.Depots
 import com.vcs.sources.localDB.dictionary.Dictionary
@@ -13,6 +11,8 @@ import com.vcs.sources.localDB.depots.DepotsController
 import com.vcs.sources.localDB.dictionary.DictionaryController
 import com.vcs.sources.localDB.referencedTables.areasCalendar.AreasCalendar
 import com.vcs.sources.localDB.referencedTables.areasTrashContainers.AreasTrashContainers
+import com.vcs.sources.localDB.referencedTables.areasTrashContainers.AreasTrashContainersController
+import com.vcs.sources.localDB.referencedTables.areasTrashContainersNew.AreasTrashContainersControllerNew
 import com.vcs.sources.localDB.retires.Retires
 import com.vcs.sources.localDB.retires.RetiresController
 import com.vcs.sources.localDB.trashContainers.TrashContainers
@@ -42,12 +42,20 @@ import org.koin.ktor.ext.inject
 
 fun Application.module() {
     initDB()
+    install(DefaultHeaders)
     install(CORS) {
+        method(HttpMethod.Options)
         method(HttpMethod.Get)
         method(HttpMethod.Post)
+        header(HttpHeaders.AccessControlAllowOrigin)
+        method(HttpMethod.Put)
+        method(HttpMethod.Delete)
+        method(HttpMethod.Patch)
+        header(HttpHeaders.AccessControlAllowHeaders)
+        header(HttpHeaders.ContentType)
+        allowCredentials = true
         anyHost()
     }
-    install(DefaultHeaders)
     install(CallLogging)
     install(ContentNegotiation) {
         gson {}
@@ -56,7 +64,6 @@ fun Application.module() {
     startKoin {
         logger(PrintLogger(Level.NONE))
         modules(
-            firebaseModule,
             controllersModule
         )
     }
@@ -66,6 +73,8 @@ fun Application.module() {
     val retiresController: RetiresController by inject()
     val trashController: TrashContainersController by inject()
     val areasController: AreasController by inject()
+    val areaTrashContainersController: AreasTrashContainersController by inject()
+    val areaTrashContainersControllerNew: AreasTrashContainersControllerNew by inject()
 
     routing {
         get("/init") {
@@ -118,13 +127,45 @@ fun Application.module() {
             }
         }
 
-        get("/depots") {
-            val depots = depotsController.getAll().map { DepotItemJson(it) }
-            call.respond(depots)
+        route("/depots") {
+            get {
+                val depots = depotsController.getAll().map { DepotItemJson(it) }
+                call.respond(depots)
+            }
+
+            post("update") {
+                try {
+                    val depotItemJson = call.receive<DepotItemJson>()
+                    val depotItem = depotsController.update(depotItemJson)
+                    call.respond(PostResult.Success(DepotItemJson(depotItem)))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+
+            post("new") {
+                try {
+                    val depotItemJson = call.receive<DepotItemJson>()
+                    val depotItem = depotsController.createNew(depotItemJson)
+                    call.respond(PostResult.Success(DepotItemJson(depotItem)))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+
+            post("delete") {
+                try {
+                    val depotItemJson = call.receive<DepotItemJson>()
+                    depotsController.delete(depotItemJson)
+                    call.respond(PostResult.Success<Nothing>())
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
         }
 
         route("/retires") {
-            get() {
+            get {
                 val retires = retiresController.getAll().map { RetireItemJson(it) }
                 call.respond(retires)
             }
@@ -166,22 +207,35 @@ fun Application.module() {
             }
         }
 
-        get("/trash_conts") {
-            val trashConts = trashController.getAll().map { TrashContainerJson(it) }
-            call.respond(trashConts)
+        route("/trash_conts") {
+            get {
+                val trashConts = trashController.getAll().map { TrashContainerJson(it) }
+                call.respond(trashConts)
+            }
+
+            get("areas/{id}") {
+                val areaId = call.parameters["id"]
+                val result = areaTrashContainersController.getTrashContainersForArea()
+                call.respond(areaId ?: "null")
+            }
+
+            get("move") {
+                areaTrashContainersControllerNew.move()
+                call.respond("ok")
+            }
         }
 
         route("/areas") {
-            get() {
+            get {
                 val areas = areasController.getAll().map { AreaItemJson(it) }
                 call.respond(areas)
             }
 
-            route("save") {
-                post() {
+            route("update") {
+                post {
                     try {
                         val areaItemJson = call.receive<AreaItemJson>()
-                        val areaItem = areasController.save(areaItemJson)
+                        val areaItem = areasController.update(areaItemJson)
                         call.respond(PostResult.Success(AreaItemJson(areaItem)))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))

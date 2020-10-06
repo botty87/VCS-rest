@@ -1,22 +1,21 @@
 package com.vcs
 
-import com.vcs.data.PostResult
+import com.vcs.data.http.PostResult
 import com.vcs.data.json.*
 import com.vcs.di.controllersModule
-import com.vcs.sources.localDB.depots.Depots
-import com.vcs.sources.localDB.dictionary.Dictionary
-import com.vcs.sources.localDB.areas.Areas
-import com.vcs.sources.localDB.areas.AreasController
-import com.vcs.sources.localDB.depots.DepotsController
-import com.vcs.sources.localDB.dictionary.DictionaryController
-import com.vcs.sources.localDB.referencedTables.areasCalendar.AreasCalendar
-import com.vcs.sources.localDB.referencedTables.areasTrashContainers.AreasTrashContainers
-import com.vcs.sources.localDB.referencedTables.areasTrashContainers.AreasTrashContainersController
-import com.vcs.sources.localDB.referencedTables.areasTrashContainersNew.AreasTrashContainersControllerNew
-import com.vcs.sources.localDB.retires.Retires
-import com.vcs.sources.localDB.retires.RetiresController
-import com.vcs.sources.localDB.trashContainers.TrashContainers
-import com.vcs.sources.localDB.trashContainers.TrashContainersController
+import controllers.depots.Depots
+import controllers.dictionary.Dictionary
+import controllers.areas.Areas
+import controllers.areas.AreasController
+import controllers.depots.DepotsController
+import controllers.dictionary.DictionaryController
+import controllers.referencedTables.areasCalendar.AreasCalendar
+import controllers.referencedTables.areasTrashContainers.AreasTrashContainers
+import controllers.referencedTables.areasTrashContainers.AreasTrashContainersController
+import controllers.retires.Retires
+import controllers.retires.RetiresController
+import com.vcs.controllers.trashContainers.TrashContainers
+import com.vcs.controllers.trashContainers.TrashContainersController
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
@@ -74,7 +73,6 @@ fun Application.module() {
     val trashController: TrashContainersController by inject()
     val areasController: AreasController by inject()
     val areaTrashContainersController: AreasTrashContainersController by inject()
-    val areaTrashContainersControllerNew: AreasTrashContainersControllerNew by inject()
 
     routing {
         get("/init") {
@@ -85,7 +83,7 @@ fun Application.module() {
         }
 
         route("/dictionary") {
-            get() {
+            get {
                 val dictionary = dictionaryController.getAll().map { DictionaryItemJson(it) }
                 call.respond(dictionary)
             }
@@ -214,14 +212,14 @@ fun Application.module() {
             }
 
             get("areas/{id}") {
-                val areaId = call.parameters["id"]
-                val result = areaTrashContainersController.getTrashContainersForArea()
-                call.respond(areaId ?: "null")
-            }
-
-            get("move") {
-                areaTrashContainersControllerNew.move()
-                call.respond("ok")
+                try {
+                    val areaId = call.parameters["id"]!!.toInt()
+                    val trashContainers = areaTrashContainersController.getTrashContainersForArea(areaId)
+                            .map { TrashContainerJson(it) }
+                    call.respond(trashContainers)
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
             }
         }
 
@@ -250,4 +248,7 @@ private fun initDB() {
     val config = HikariConfig("/hikari.properties")
     val ds = HikariDataSource(config)
     Database.connect(ds)
+    transaction {
+        SchemaUtils.create(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers, Retires, TrashContainers)
+    }
 }

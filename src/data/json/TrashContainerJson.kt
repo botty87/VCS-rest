@@ -1,7 +1,7 @@
 package com.vcs.data.json
 
 import com.vcs.data.base.TrashContainerBase
-import com.vcs.data.localDB.TrashContainerItem
+import data.db.TrashContainerItem
 
 class TrashContainerJson(trashContainerItem: TrashContainerItem): TrashContainerBase {
     val id = trashContainerItem.id.value

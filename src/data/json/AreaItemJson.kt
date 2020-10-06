@@ -1,7 +1,7 @@
 package com.vcs.data.json
 
 import com.vcs.data.base.AreaItemBase
-import com.vcs.data.localDB.AreaItem
+import data.db.AreaItem
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class AreaItemJson(areaItem: AreaItem): AreaItemBase {

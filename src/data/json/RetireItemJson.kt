@@ -1,7 +1,7 @@
 package com.vcs.data.json
 
 import com.vcs.data.base.RetireItemBase
-import com.vcs.data.localDB.RetireItem
+import data.db.RetireItem
 import java.time.LocalDate
 
 class RetireItemJson(retireItem: RetireItem?) : RetireItemBase {

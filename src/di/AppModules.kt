@@ -1,21 +1,19 @@
 package com.vcs.di
 
-import com.vcs.sources.localDB.areas.AreasController
-import com.vcs.sources.localDB.areas.AreasControllerImpl
-import com.vcs.sources.localDB.dictionary.DictionaryControllerImpl
-import com.vcs.sources.localDB.depots.DepotsController
-import com.vcs.sources.localDB.depots.DepotsControllerImp
-import com.vcs.sources.localDB.dictionary.DictionaryController
-import com.vcs.sources.localDB.referencedTables.areasCalendar.AreasCalendarController
-import com.vcs.sources.localDB.referencedTables.areasCalendar.AreasCalendarControllerImpl
-import com.vcs.sources.localDB.referencedTables.areasTrashContainers.AreasTrashContainersController
-import com.vcs.sources.localDB.referencedTables.areasTrashContainers.AreasTrashContainersControllerImpl
-import com.vcs.sources.localDB.referencedTables.areasTrashContainersNew.AreasTrashContainersControllerImplNew
-import com.vcs.sources.localDB.referencedTables.areasTrashContainersNew.AreasTrashContainersControllerNew
-import com.vcs.sources.localDB.retires.RetiresController
-import com.vcs.sources.localDB.retires.RetiresControllerImpl
-import com.vcs.sources.localDB.trashContainers.TrashContainersController
-import com.vcs.sources.localDB.trashContainers.TrashContainersControllerImpl
+import controllers.areas.AreasController
+import controllers.areas.AreasControllerImpl
+import controllers.dictionary.DictionaryControllerImpl
+import controllers.depots.DepotsController
+import controllers.depots.DepotsControllerImp
+import controllers.dictionary.DictionaryController
+import controllers.referencedTables.areasCalendar.AreasCalendarController
+import controllers.referencedTables.areasCalendar.AreasCalendarControllerImpl
+import controllers.referencedTables.areasTrashContainers.AreasTrashContainersController
+import controllers.referencedTables.areasTrashContainers.AreasTrashContainersControllerImpl
+import controllers.retires.RetiresController
+import controllers.retires.RetiresControllerImpl
+import com.vcs.controllers.trashContainers.TrashContainersController
+import controllers.trashContainers.TrashContainersControllerImpl
 import org.koin.dsl.module
 
 val controllersModule = module {
@@ -25,6 +23,5 @@ val controllersModule = module {
     single<AreasController> { AreasControllerImpl() }
     single<AreasCalendarController> { AreasCalendarControllerImpl() }
     single<TrashContainersController> { TrashContainersControllerImpl() }
-    single<AreasTrashContainersController> {AreasTrashContainersControllerImpl() }
-    single<AreasTrashContainersControllerNew> {AreasTrashContainersControllerImplNew() }
+    single<AreasTrashContainersController> { AreasTrashContainersControllerImpl() }
 }

@@ -1,7 +1,7 @@
 package com.vcs.data.json
 
 import com.vcs.data.base.DictionaryItemBase
-import com.vcs.data.localDB.DictionaryItem
+import data.db.DictionaryItem
 
 class DictionaryItemJson(dictionaryItem: DictionaryItem): DictionaryItemBase {
     val id = dictionaryItem.id.value

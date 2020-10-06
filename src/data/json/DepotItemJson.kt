@@ -1,7 +1,7 @@
 package com.vcs.data.json
 
 import com.vcs.data.base.DepotItemBase
-import com.vcs.data.localDB.DepotItem
+import data.db.DepotItem
 
 class DepotItemJson(depotItem: DepotItem): DepotItemBase {
     val id = depotItem.id.value

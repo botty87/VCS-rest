@@ -1,11 +1,13 @@
 package controllers.referencedTables.areasTrashContainers
 
+import com.vcs.controllers.trashContainers.TrashContainers
 import data.db.TrashContainerItem
 import controllers.areas.Areas
 import data.db.AreaTrashItem
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.dao.Entity
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class AreasTrashContainersControllerImpl: AreasTrashContainersController {
@@ -22,6 +24,26 @@ class AreasTrashContainersControllerImpl: AreasTrashContainersController {
             }.map { it[AreasTrashContainers.trashContainer] }
 
             TrashContainerItem.forEntityIds(retiresIds).toList()
+        }
+    }
+
+    override fun getAreasIdForTrashContainer(contId: Int): List<Int> {
+        return transaction {
+            AreasTrashContainers.select {
+                AreasTrashContainers.trashContainer eq contId
+            }.map { it[AreasTrashContainers.area].value }
+        }
+    }
+
+    override fun setTrashContainerAndAreas(trashContainerItem: TrashContainerItem, areasId: List<Int>) {
+        transaction {
+            AreasTrashContainers.deleteWhere {
+                (AreasTrashContainers.trashContainer eq trashContainerItem.id)
+            }
+            AreasTrashContainers.batchInsert(areasId, shouldReturnGeneratedValues = false) { areaId ->
+                this[AreasTrashContainers.trashContainer] = trashContainerItem.id
+                this[AreasTrashContainers.area] = EntityID(areaId, Areas)
+            }
         }
     }
 }

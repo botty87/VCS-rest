@@ -221,6 +221,48 @@ fun Application.module() {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
             }
+
+            get("cont/{id}") {
+                try {
+                    val containerId = call.parameters["id"]!!.toInt()
+                    val areasId = areaTrashContainersController.getAreasIdForTrashContainer(containerId)
+                    call.respond(areasId)
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+
+            post("update") {
+                try {
+                    val trashContainerAreasJson = call.receive<TrashContainerAreasJson>()
+                    val trashContainerItem = trashController.update(trashContainerAreasJson.trashContainer)
+                    areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, trashContainerAreasJson.areasId)
+                    call.respond(PostResult.Success(TrashContainerJson(trashContainerItem)))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+
+            post("new") {
+                try {
+                    val trashContainerAreasJson = call.receive<TrashContainerAreasJson>()
+                    val trashContainerItem = trashController.new(trashContainerAreasJson.trashContainer)
+                    areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, trashContainerAreasJson.areasId)
+                    call.respond(PostResult.Success(TrashContainerJson(trashContainerItem)))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+
+            post("delete") {
+                try {
+                    val trashContainerJson = call.receive<TrashContainerJson>()
+                    trashController.delete(trashContainerJson)
+                    call.respond(PostResult.Success<Nothing>())
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
         }
 
         route("/areas") {

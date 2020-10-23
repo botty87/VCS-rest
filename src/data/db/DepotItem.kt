@@ -1,7 +1,7 @@
 package data.db
 
 import com.vcs.data.base.DepotItemBase
-import controllers.depots.Depots
+import com.vcs.data.dbTables.Depots
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

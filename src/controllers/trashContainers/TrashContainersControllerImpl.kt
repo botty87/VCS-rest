@@ -1,6 +1,6 @@
 package controllers.trashContainers
 
-import com.vcs.controllers.trashContainers.TrashContainers
+import com.vcs.data.dbTables.TrashContainers
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.data.json.TrashContainerJson
 import data.db.TrashContainerItem

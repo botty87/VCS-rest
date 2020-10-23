@@ -1,7 +1,7 @@
 package data.db
 
 import com.vcs.data.base.RetireItemBase
-import controllers.retires.Retires
+import com.vcs.data.dbTables.Retires
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

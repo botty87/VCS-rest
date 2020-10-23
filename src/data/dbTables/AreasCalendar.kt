@@ -1,7 +1,5 @@
-package controllers.referencedTables.areasCalendar
+package com.vcs.data.dbTables
 
-import controllers.areas.Areas
-import controllers.retires.Retires
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 

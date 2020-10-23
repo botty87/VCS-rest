@@ -1,7 +1,7 @@
 package data.db
 
 import com.vcs.data.base.DictionaryItemBase
-import controllers.dictionary.Dictionary
+import com.vcs.data.dbTables.Dictionary
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

@@ -1,6 +1,5 @@
-package controllers.areas
+package com.vcs.data.dbTables
 
-import controllers.depots.Depots
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object Areas: IntIdTable() {

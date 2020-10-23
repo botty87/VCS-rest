@@ -1,4 +1,4 @@
-package com.vcs.controllers.trashContainers
+package com.vcs.data.dbTables
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 

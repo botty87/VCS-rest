@@ -1,5 +1,6 @@
 package controllers.dictionary
 
+import com.vcs.data.dbTables.Dictionary
 import com.vcs.data.json.DictionaryItemJson
 import data.db.DictionaryItem
 import org.jetbrains.exposed.sql.deleteAll

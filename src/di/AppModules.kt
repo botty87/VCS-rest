@@ -1,5 +1,7 @@
 package com.vcs.di
 
+import com.vcs.controllers.tokens.TokensController
+import com.vcs.controllers.tokens.TokensControllerImpl
 import controllers.areas.AreasController
 import controllers.areas.AreasControllerImpl
 import controllers.dictionary.DictionaryControllerImpl
@@ -13,6 +15,8 @@ import controllers.referencedTables.areasTrashContainers.AreasTrashContainersCon
 import controllers.retires.RetiresController
 import controllers.retires.RetiresControllerImpl
 import com.vcs.controllers.trashContainers.TrashContainersController
+import com.vcs.controllers.users.UsersController
+import com.vcs.controllers.users.UsersControllerImp
 import controllers.trashContainers.TrashContainersControllerImpl
 import org.koin.dsl.module
 
@@ -24,4 +28,6 @@ val controllersModule = module {
     single<AreasCalendarController> { AreasCalendarControllerImpl() }
     single<TrashContainersController> { TrashContainersControllerImpl() }
     single<AreasTrashContainersController> { AreasTrashContainersControllerImpl() }
+    single<TokensController> { TokensControllerImpl() }
+    single<UsersController> { UsersControllerImp() }
 }

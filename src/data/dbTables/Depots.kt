@@ -1,4 +1,4 @@
-package controllers.depots
+package com.vcs.data.dbTables
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 

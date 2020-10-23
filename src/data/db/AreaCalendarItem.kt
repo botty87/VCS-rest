@@ -1,6 +1,6 @@
 package data.db
 
-import controllers.referencedTables.areasCalendar.AreasCalendar
+import com.vcs.data.dbTables.AreasCalendar
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

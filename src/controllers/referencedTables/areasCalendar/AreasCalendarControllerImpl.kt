@@ -2,6 +2,7 @@ package controllers.referencedTables.areasCalendar
 
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
+import com.vcs.data.dbTables.AreasCalendar
 import data.db.AreaCalendarItem
 import data.db.AreaItem
 import data.db.RetireItem

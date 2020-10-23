@@ -1,12 +1,9 @@
 package controllers.referencedTables.areasTrashContainers
 
-import com.vcs.controllers.trashContainers.TrashContainers
+import com.vcs.data.dbTables.AreasTrashContainers
 import data.db.TrashContainerItem
-import controllers.areas.Areas
-import data.db.AreaTrashItem
-import org.jetbrains.exposed.dao.Entity
+import com.vcs.data.dbTables.Areas
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 

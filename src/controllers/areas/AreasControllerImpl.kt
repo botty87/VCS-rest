@@ -1,5 +1,6 @@
 package controllers.areas
 
+import com.vcs.data.dbTables.Areas
 import com.vcs.data.json.AreaItemJson
 import data.db.AreaItem
 import data.db.DepotItem

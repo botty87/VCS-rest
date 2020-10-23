@@ -1,7 +1,5 @@
-package controllers.referencedTables.areasTrashContainers
+package com.vcs.data.dbTables
 
-import controllers.areas.Areas
-import com.vcs.controllers.trashContainers.TrashContainers
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 

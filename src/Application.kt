@@ -3,19 +3,14 @@ package com.vcs
 import com.vcs.data.http.PostResult
 import com.vcs.data.json.*
 import com.vcs.di.controllersModule
-import controllers.depots.Depots
-import controllers.dictionary.Dictionary
-import controllers.areas.Areas
 import controllers.areas.AreasController
 import controllers.depots.DepotsController
 import controllers.dictionary.DictionaryController
-import controllers.referencedTables.areasCalendar.AreasCalendar
-import controllers.referencedTables.areasTrashContainers.AreasTrashContainers
 import controllers.referencedTables.areasTrashContainers.AreasTrashContainersController
-import controllers.retires.Retires
 import controllers.retires.RetiresController
-import com.vcs.controllers.trashContainers.TrashContainers
 import com.vcs.controllers.trashContainers.TrashContainersController
+import com.vcs.controllers.users.UsersController
+import com.vcs.data.dbTables.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
@@ -73,6 +68,7 @@ fun Application.module() {
     val trashController: TrashContainersController by inject()
     val areasController: AreasController by inject()
     val areaTrashContainersController: AreasTrashContainersController by inject()
+    val usersController: UsersController by inject()
 
     routing {
         get("/init") {
@@ -283,6 +279,18 @@ fun Application.module() {
                 }
             }
         }
+
+        route("/user") {
+            post("login") {
+                try {
+                    val userJson = call.receive<UserItemJson>()
+                    val token = usersController.login(userJson)
+                    call.respond(PostResult.Success(token))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+        }
     }
 }
 
@@ -291,6 +299,6 @@ private fun initDB() {
     val ds = HikariDataSource(config)
     Database.connect(ds)
     transaction {
-        SchemaUtils.create(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers, Retires, TrashContainers)
+        SchemaUtils.create(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers, Retires, TrashContainers, Users, Tokens)
     }
 }

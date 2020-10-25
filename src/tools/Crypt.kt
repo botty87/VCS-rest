@@ -19,13 +19,6 @@ object Crypt {
 
     private const val KEY = "~6({2JS(,YK~p7EgE6`99>xm;]zY]n[R"
 
-    fun hash(value: String): String {
-        val bytes = value.toByteArray()
-        val md = MessageDigest.getInstance("SHA-256")
-        val digest = md.digest(bytes)
-        return digest.fold("", { str, it -> str + "%02x".format(it) })
-    }
-
     fun encrypt(str:String):String{
         val encrypted = cipher(Cipher.ENCRYPT_MODE).doFinal(str.toByteArray(Charsets.UTF_8))
         return String(encoder.encode(encrypted))
@@ -47,6 +40,13 @@ object Crypt {
     fun createRandomToken() : String {
         val alphabet: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         return List(32) { alphabet.random() }.joinToString("")
+    }
+
+    private fun hash(value: String): String {
+        val bytes = value.toByteArray()
+        val md = MessageDigest.getInstance("SHA-256")
+        val digest = md.digest(bytes)
+        return digest.fold("", { str, it -> str + "%02x".format(it) })
     }
 
     @ExperimentalTime

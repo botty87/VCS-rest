@@ -51,7 +51,7 @@ class TokensControllerImpl: TokensController {
             }.firstOrNull()
         } ?: return false
 
-        if(tokenItem.isOld()) {
+        if(tokenItem.isOld() || !tokenItem.user.active) {
             transaction {
                 tokenItem.active = false
             }

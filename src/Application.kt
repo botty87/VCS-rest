@@ -13,6 +13,7 @@ import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
 import com.vcs.data.dbTables.*
 import com.vcs.data.http.PostRequest
+import com.vcs.tools.Crypt
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
@@ -289,15 +290,18 @@ fun Application.module() {
             post("login") {
                 try {
                     val userJson = call.receive<UserItemJson>()
-                    val token = if(userJson.username == "debug") {
-                        "n6zqn7wNiBEi49ZfSQPGLKHbHbm1fXLS"
-                    } else {
-                        usersController.login(userJson)
-                    }
+                    val token = usersController.login(userJson)
                     call.respond(PostResult.Success(token))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
+            }
+        }
+
+        route("/crypt") {
+            get("en/{text}") {
+                val text = call.parameters["text"]!!
+                call.respond(Crypt.encrypt(text))
             }
         }
     }

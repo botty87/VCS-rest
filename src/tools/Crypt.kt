@@ -1,10 +1,8 @@
 package com.vcs.tools
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import java.security.MessageDigest
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -49,20 +47,18 @@ object Crypt {
         return digest.fold("", { str, it -> str + "%02x".format(it) })
     }
 
-    @ExperimentalTime
     fun checkHash(hash: String, stringToCheck: String): Boolean {
-        fun decodeAndCompare(instant: Instant): Boolean {
-            val minute = instant.toLocalDateTime(TimeZone.UTC).minute
-            val passwordToHash = stringToCheck + minute.toString().padStart(2, '0')
+        fun decodeAndCompare(nowDateTime: LocalDateTime): Boolean {
+            val passwordToHash = stringToCheck + nowDateTime.minute.toString().padStart(2, '0')
             val hashToCheck = hash(passwordToHash)
             return hashToCheck == hash
         }
 
-        val instant = Clock.System.now()
-        return if(decodeAndCompare(instant)) {
+        val nowDateTime = LocalDateTime.now(ZoneOffset.UTC)
+        return if(decodeAndCompare(nowDateTime)) {
             true
         } else {
-            decodeAndCompare(instant.minus(1.toDuration(DurationUnit.MINUTES)))
+            decodeAndCompare(nowDateTime.minusMinutes(1))
         }
     }
 }

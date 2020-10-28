@@ -18,7 +18,7 @@ apply plugin: 'com.bmuschko.tomcat'
 apply plugin: 'application'
 
 group 'com.vcs'
-//version '0.0.1'
+//version '1.1.0'
 mainClassName = "io.ktor.server.netty.EngineMain"
 
 webAppDirName = 'webapp'
@@ -54,7 +54,8 @@ dependencies {
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "io.ktor:ktor-server-core:$ktor_version"
-    implementation "io.ktor:ktor-gson:$ktor_version"
+    //implementation "io.ktor:ktor-gson:$ktor_version"
+    implementation "io.ktor:ktor-jackson:$ktor_version"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 
     implementation "com.zaxxer:HikariCP:3.4.5"
@@ -66,8 +67,6 @@ dependencies {
 
     implementation "org.koin:koin-ktor:$koin_version"
     implementation "com.google.guava:guava:29.0-jre"
-
-    implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.1.0"
 }
 
 //task run(dependsOn: tomcatRun)

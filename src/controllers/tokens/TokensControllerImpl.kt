@@ -2,10 +2,11 @@ package com.vcs.controllers.tokens
 
 import com.vcs.data.db.TokenItem
 import com.vcs.data.db.UserItem
+import com.vcs.data.db.isOld
+import com.vcs.data.db.notActive
 import com.vcs.data.dbTables.Tokens
 import com.vcs.tools.Crypt
 import org.jetbrains.exposed.exceptions.ExposedSQLException
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
@@ -25,9 +26,7 @@ class TokensControllerImpl: TokensController {
             try {
                 return transaction {
                     invalidateOldUserTokens()
-
-                    val test = Crypt.createRandomToken()
-                    TokenItem.new(test) {
+                    TokenItem.new(Crypt.createRandomToken()) {
                         this.user = user
                         this.start = LocalDateTime.now()
                     }
@@ -43,5 +42,25 @@ class TokensControllerImpl: TokensController {
         }
 
         return createToken()
+    }
+
+    override fun checkToken(token: String): Boolean {
+        val tokenItem = transaction {
+            TokenItem.find {
+                Tokens.id eq token
+            }.firstOrNull()
+        } ?: return false
+
+        if(tokenItem.isOld()) {
+            transaction {
+                tokenItem.active = false
+            }
+        }
+
+        if(tokenItem.notActive) {
+            return false
+        }
+
+        return true
     }
 }

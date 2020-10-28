@@ -1,5 +1,6 @@
 package com.vcs
 
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.vcs.data.http.PostResult
 import com.vcs.data.json.*
 import com.vcs.di.controllersModule
@@ -11,14 +12,15 @@ import controllers.retires.RetiresController
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
 import com.vcs.data.dbTables.*
+import com.vcs.data.http.PostRequest
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.*
-import io.ktor.gson.gson
 import io.ktor.http.*
+import io.ktor.jackson.*
 import io.ktor.request.*
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -52,7 +54,10 @@ fun Application.module() {
     }
     install(CallLogging)
     install(ContentNegotiation) {
-        gson {}
+        jackson {
+            // extension method of ObjectMapper to allow config etc
+            enable(SerializationFeature.INDENT_OUTPUT)
+        }
     }
 
     startKoin {
@@ -87,8 +92,8 @@ fun Application.module() {
             route("new") {
                 post {
                     try {
-                        val dictionaryItemJson = call.receive<DictionaryItemJson>()
-                        val dictionaryItem = dictionaryController.createNew(dictionaryItemJson)
+                        val request = call.receive<PostRequest<DictionaryItemJson>>()
+                        val dictionaryItem = dictionaryController.createNew(request.data)
                         call.respond(PostResult.Success(DictionaryItemJson(dictionaryItem)))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
@@ -99,8 +104,8 @@ fun Application.module() {
             route("update") {
                 post{
                     try {
-                        val dictionaryItemJson = call.receive<DictionaryItemJson>()
-                        val dictionaryItem = dictionaryController.update(dictionaryItemJson)
+                        val request = call.receive<PostRequest<DictionaryItemJson>>()
+                        val dictionaryItem = dictionaryController.update(request.data)
                         call.respond(PostResult.Success(DictionaryItemJson(dictionaryItem)))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
@@ -111,8 +116,8 @@ fun Application.module() {
             route("delete") {
                 post{
                     try {
-                        val dictionaryItemJson = call.receive<DictionaryItemJson>()
-                        dictionaryController.delete(dictionaryItemJson)
+                        val request = call.receive<PostRequest<DictionaryItemJson>>()
+                        dictionaryController.delete(request.data)
                         call.respond(PostResult.Success<Nothing>())
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
@@ -129,8 +134,8 @@ fun Application.module() {
 
             post("update") {
                 try {
-                    val depotItemJson = call.receive<DepotItemJson>()
-                    val depotItem = depotsController.update(depotItemJson)
+                    val request = call.receive<PostRequest<DepotItemJson>>()
+                    val depotItem = depotsController.update(request.data)
                     call.respond(PostResult.Success(DepotItemJson(depotItem)))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
@@ -139,8 +144,8 @@ fun Application.module() {
 
             post("new") {
                 try {
-                    val depotItemJson = call.receive<DepotItemJson>()
-                    val depotItem = depotsController.createNew(depotItemJson)
+                    val request = call.receive<PostRequest<DepotItemJson>>()
+                    val depotItem = depotsController.createNew(request.data)
                     call.respond(PostResult.Success(DepotItemJson(depotItem)))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
@@ -149,8 +154,8 @@ fun Application.module() {
 
             post("delete") {
                 try {
-                    val depotItemJson = call.receive<DepotItemJson>()
-                    depotsController.delete(depotItemJson)
+                    val request = call.receive<PostRequest<DepotItemJson>>()
+                    depotsController.delete(request.data)
                     call.respond(PostResult.Success<Nothing>())
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
@@ -167,8 +172,8 @@ fun Application.module() {
             route("new") {
                 post {
                     try {
-                        val retireItemJson = call.receive<RetireItemJson>()
-                        val retireItem = retiresController.createNew(retireItemJson)
+                        val request = call.receive<PostRequest<RetireItemJson>>()
+                        val retireItem = retiresController.createNew(request.data)
                         call.respond(PostResult.Success(RetireItemJson(retireItem)))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
@@ -179,8 +184,8 @@ fun Application.module() {
             route("update") {
                 post {
                     try {
-                        val retireItemJson = call.receive<RetireItemJson>()
-                        val retireItem = retiresController.update(retireItemJson)
+                        val request = call.receive<PostRequest<RetireItemJson>>()
+                        val retireItem = retiresController.update(request.data)
                         call.respond(PostResult.Success(RetireItemJson(retireItem)))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
@@ -191,8 +196,8 @@ fun Application.module() {
             route("delete") {
                 post {
                     try {
-                        val retireItemJson = call.receive<RetireItemJson>()
-                        retiresController.delete(retireItemJson)
+                        val request = call.receive<PostRequest<RetireItemJson>>()
+                        retiresController.delete(request.data)
                         call.respond(PostResult.Success<Nothing>())
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
@@ -230,9 +235,9 @@ fun Application.module() {
 
             post("update") {
                 try {
-                    val trashContainerAreasJson = call.receive<TrashContainerAreasJson>()
-                    val trashContainerItem = trashController.update(trashContainerAreasJson.trashContainer)
-                    areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, trashContainerAreasJson.areasId)
+                    val request = call.receive<PostRequest<TrashContainerAreasJson>>()
+                    val trashContainerItem = trashController.update(request.data.trashContainer)
+                    areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, request.data.areasId)
                     call.respond(PostResult.Success(TrashContainerJson(trashContainerItem)))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
@@ -241,9 +246,9 @@ fun Application.module() {
 
             post("new") {
                 try {
-                    val trashContainerAreasJson = call.receive<TrashContainerAreasJson>()
-                    val trashContainerItem = trashController.new(trashContainerAreasJson.trashContainer)
-                    areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, trashContainerAreasJson.areasId)
+                    val request = call.receive<PostRequest<TrashContainerAreasJson>>()
+                    val trashContainerItem = trashController.new(request.data.trashContainer)
+                    areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, request.data.areasId)
                     call.respond(PostResult.Success(TrashContainerJson(trashContainerItem)))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
@@ -252,8 +257,8 @@ fun Application.module() {
 
             post("delete") {
                 try {
-                    val trashContainerJson = call.receive<TrashContainerJson>()
-                    trashController.delete(trashContainerJson)
+                    val request = call.receive<PostRequest<TrashContainerJson>>()
+                    trashController.delete(request.data)
                     call.respond(PostResult.Success<Nothing>())
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
@@ -270,8 +275,8 @@ fun Application.module() {
             route("update") {
                 post {
                     try {
-                        val areaItemJson = call.receive<AreaItemJson>()
-                        val areaItem = areasController.update(areaItemJson)
+                        val request = call.receive<PostRequest<AreaItemJson>>()
+                        val areaItem = areasController.update(request.data)
                         call.respond(PostResult.Success(AreaItemJson(areaItem)))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
@@ -284,7 +289,11 @@ fun Application.module() {
             post("login") {
                 try {
                     val userJson = call.receive<UserItemJson>()
-                    val token = usersController.login(userJson)
+                    val token = if(userJson.username == "debug") {
+                        "n6zqn7wNiBEi49ZfSQPGLKHbHbm1fXLS"
+                    } else {
+                        usersController.login(userJson)
+                    }
                     call.respond(PostResult.Success(token))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))

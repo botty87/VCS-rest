@@ -5,4 +5,5 @@ import com.vcs.data.db.UserItem
 
 interface TokensController {
     fun create(user: UserItem) : TokenItem
+    fun checkToken(token : String) : Boolean
 }

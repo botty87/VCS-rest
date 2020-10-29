@@ -6,4 +6,5 @@ object Users: IntIdTable() {
     val username = text("username").uniqueIndex()
     val password = text("password")
     val active = bool("active")
+    val admin = bool("admin")
 }

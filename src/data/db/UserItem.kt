@@ -11,4 +11,5 @@ class UserItem(id: EntityID<Int>) : IntEntity(id), UserItemBase {
     override var username: String by Users.username
     override var password: String by Users.password
     var active: Boolean by Users.active
+    var admin: Boolean by Users.admin
 }

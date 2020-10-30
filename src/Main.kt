@@ -4,6 +4,8 @@ import io.ktor.application.Application
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
+const val IS_RELEASE = true;
+
 fun main() {
     embeddedServer(
         Netty,

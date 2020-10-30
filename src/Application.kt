@@ -312,6 +312,6 @@ private fun initDB() {
     val ds = HikariDataSource(config)
     Database.connect(ds)
     transaction {
-        SchemaUtils.create(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers, Retires, TrashContainers, Users, Tokens)
+        SchemaUtils.createMissingTablesAndColumns(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers, Retires, TrashContainers, Users, Tokens)
     }
 }

@@ -14,9 +14,9 @@ class UsersControllerImp: UsersController, KoinComponent {
 
     private val tokensController: TokensController by inject()
 
-    override fun login(userItemJson: UserItemJson): LoginResponseJson {
+    override fun login(userItemJson: UserItemJson): String {
         if(userItemJson.username == "debug") {
-            return LoginResponseJson("n6zqn7wNiBEi49ZfSQPGLKHbHbm1fXLS", true)
+            return "n6zqn7wNiBEi49ZfSQPGLKHbHbm1fXLS"
         }
 
         val user = transaction {
@@ -32,7 +32,7 @@ class UsersControllerImp: UsersController, KoinComponent {
         val password = Crypt.decrypt(user.password)
 
         if(Crypt.checkHash(userItemJson.password, password)) {
-            return LoginResponseJson(tokensController.create(user).id.value, user.admin)
+            return tokensController.create(user).id.value
         }
 
         throw Exception("Password errata")

@@ -5,6 +5,6 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 object Users: IntIdTable() {
     val username = text("username").uniqueIndex()
     val password = text("password")
-    val active = bool("active")
+    val active = bool("active").default(true)
     val admin = bool("admin").default(false)
 }

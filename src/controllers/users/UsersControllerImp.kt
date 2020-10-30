@@ -1,5 +1,6 @@
 package com.vcs.controllers.users
 
+import com.vcs.IS_RELEASE
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.data.db.UserItem
 import com.vcs.data.dbTables.Users
@@ -17,7 +18,7 @@ class UsersControllerImp: UsersController, KoinComponent {
     private val tokensController: TokensController by inject()
 
     override fun login(loginRequest: LoginRequest): LoginResponse {
-        if(loginRequest.username == "debug") {
+        if(loginRequest.username == "debug" && !IS_RELEASE) {
             return LoginResponse("n6zqn7wNiBEi49ZfSQPGLKHbHbm1fXLS", true)
         }
 

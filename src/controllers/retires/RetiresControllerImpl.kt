@@ -6,11 +6,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.ZoneId
 
 class RetiresControllerImpl: RetiresController {
-    private val zone by lazy {
-        ZoneId.getAvailableZoneIds().first {
-            it.contains("rome", true) || it.contains("italy", true)
-        }
-    }
 
     override fun getAll(): List<RetireItem> {
         return transaction {
@@ -19,6 +14,7 @@ class RetiresControllerImpl: RetiresController {
     }
 
     override fun createNew(retireItemJson: RetireItemJson): RetireItem {
+        val pippo = retireItemJson
         return transaction {
             RetireItem.new {
                 freq = retireItemJson.freq

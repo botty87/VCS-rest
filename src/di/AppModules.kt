@@ -2,21 +2,21 @@ package com.vcs.di
 
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.controllers.tokens.TokensControllerImpl
+import com.vcs.controllers.trashContainers.TrashContainersController
+import com.vcs.controllers.users.UsersController
+import com.vcs.controllers.users.UsersControllerImp
 import controllers.areas.AreasController
 import controllers.areas.AreasControllerImpl
-import controllers.dictionary.DictionaryControllerImpl
 import controllers.depots.DepotsController
 import controllers.depots.DepotsControllerImp
 import controllers.dictionary.DictionaryController
+import controllers.dictionary.DictionaryControllerImpl
 import controllers.referencedTables.areasCalendar.AreasCalendarController
 import controllers.referencedTables.areasCalendar.AreasCalendarControllerImpl
 import controllers.referencedTables.areasTrashContainers.AreasTrashContainersController
 import controllers.referencedTables.areasTrashContainers.AreasTrashContainersControllerImpl
 import controllers.retires.RetiresController
 import controllers.retires.RetiresControllerImpl
-import com.vcs.controllers.trashContainers.TrashContainersController
-import com.vcs.controllers.users.UsersController
-import com.vcs.controllers.users.UsersControllerImp
 import controllers.trashContainers.TrashContainersControllerImpl
 import org.koin.dsl.module
 

@@ -3,7 +3,6 @@ package controllers.retires
 import com.vcs.data.json.RetireItemJson
 import data.db.RetireItem
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.ZoneId
 
 class RetiresControllerImpl: RetiresController {
 
@@ -14,7 +13,6 @@ class RetiresControllerImpl: RetiresController {
     }
 
     override fun createNew(retireItemJson: RetireItemJson): RetireItem {
-        val pippo = retireItemJson
         return transaction {
             RetireItem.new {
                 freq = retireItemJson.freq

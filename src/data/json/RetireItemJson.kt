@@ -1,6 +1,5 @@
 package com.vcs.data.json
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.vcs.data.base.RetireItemBase
 import data.db.RetireItem
 import java.time.LocalDate
@@ -29,10 +28,10 @@ class RetireItemJson(
 
     constructor(retireItem: RetireItem) : this(
             retireItem.id.value,
-            retireItem.freq ?: 0,
+            retireItem.freq,
             retireItem.startDate,
-            retireItem.time ?: 0,
-            retireItem.type ?: 0,
-            retireItem.name ?: ""
+            retireItem.time,
+            retireItem.type,
+            retireItem.name
     )
 }

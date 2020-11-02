@@ -2,36 +2,28 @@ package com.vcs
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.vcs.data.http.PostResult
-import com.vcs.data.json.*
-import com.vcs.di.controllersModule
-import controllers.areas.AreasController
-import controllers.depots.DepotsController
-import controllers.dictionary.DictionaryController
-import controllers.referencedTables.areasTrashContainers.AreasTrashContainersController
-import controllers.retires.RetiresController
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
 import com.vcs.data.dbTables.*
 import com.vcs.data.http.LoginRequest
 import com.vcs.data.http.PostRequest
+import com.vcs.data.http.PostResult
+import com.vcs.data.json.*
+import com.vcs.di.controllersModule
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
+import controllers.areas.AreasController
+import controllers.depots.DepotsController
+import controllers.dictionary.DictionaryController
+import controllers.referencedTables.areasTrashContainers.AreasTrashContainersController
+import controllers.retires.RetiresController
+import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.jackson.*
 import io.ktor.request.*
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
-import io.ktor.routing.routing
+import io.ktor.response.*
+import io.ktor.routing.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -39,7 +31,6 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import org.koin.core.logger.PrintLogger
 import org.koin.ktor.ext.inject
-import java.time.LocalDateTime
 
 fun Application.module() {
     initDB()

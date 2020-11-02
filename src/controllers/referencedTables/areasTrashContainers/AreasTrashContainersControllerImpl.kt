@@ -1,10 +1,13 @@
 package controllers.referencedTables.areasTrashContainers
 
+import com.vcs.data.dbTables.Areas
 import com.vcs.data.dbTables.AreasTrashContainers
 import data.db.TrashContainerItem
-import com.vcs.data.dbTables.Areas
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.batchInsert
+import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class AreasTrashContainersControllerImpl: AreasTrashContainersController {

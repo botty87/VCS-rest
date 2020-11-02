@@ -2,8 +2,8 @@ package data.db
 
 import com.vcs.data.base.AreaItemBase
 import com.vcs.data.dbTables.Areas
-import controllers.referencedTables.areasCalendar.AreasCalendarController
 import com.vcs.data.dbTables.AreasTrashContainers
+import controllers.referencedTables.areasCalendar.AreasCalendarController
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

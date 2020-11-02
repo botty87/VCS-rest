@@ -1,6 +1,6 @@
 package com.vcs.tools
 
-import io.ktor.util.date.WeekDay
+import io.ktor.util.date.*
 
 object WeekDayConverter {
 

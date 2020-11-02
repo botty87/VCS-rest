@@ -1,34 +1,29 @@
 package com.vcs
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.vcs.controllers.trashContainers.TrashContainersController
+import com.vcs.controllers.users.UsersController
+import com.vcs.data.dbTables.*
+import com.vcs.data.http.LoginRequest
+import com.vcs.data.http.PostRequest
 import com.vcs.data.http.PostResult
 import com.vcs.data.json.*
 import com.vcs.di.controllersModule
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import controllers.areas.AreasController
 import controllers.depots.DepotsController
 import controllers.dictionary.DictionaryController
 import controllers.referencedTables.areasTrashContainers.AreasTrashContainersController
 import controllers.retires.RetiresController
-import com.vcs.controllers.trashContainers.TrashContainersController
-import com.vcs.controllers.users.UsersController
-import com.vcs.data.dbTables.*
-import com.vcs.data.http.PostRequest
-import com.vcs.tools.Crypt
-import com.zaxxer.hikari.HikariConfig
-import com.zaxxer.hikari.HikariDataSource
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
+import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.jackson.*
 import io.ktor.request.*
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
-import io.ktor.routing.routing
+import io.ktor.response.*
+import io.ktor.routing.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -58,6 +53,7 @@ fun Application.module() {
         jackson {
             // extension method of ObjectMapper to allow config etc
             enable(SerializationFeature.INDENT_OUTPUT)
+            registerModule(JavaTimeModule())
         }
     }
 
@@ -93,7 +89,7 @@ fun Application.module() {
             route("new") {
                 post {
                     try {
-                        val request = call.receive<PostRequest<DictionaryItemJson>>()
+                        val request = call.receive<PostRequest.DictionaryItemJson>()
                         val dictionaryItem = dictionaryController.createNew(request.data)
                         call.respond(PostResult.Success(DictionaryItemJson(dictionaryItem)))
                     } catch (e: Throwable) {
@@ -105,7 +101,7 @@ fun Application.module() {
             route("update") {
                 post{
                     try {
-                        val request = call.receive<PostRequest<DictionaryItemJson>>()
+                        val request = call.receive<PostRequest.DictionaryItemJson>()
                         val dictionaryItem = dictionaryController.update(request.data)
                         call.respond(PostResult.Success(DictionaryItemJson(dictionaryItem)))
                     } catch (e: Throwable) {
@@ -117,7 +113,7 @@ fun Application.module() {
             route("delete") {
                 post{
                     try {
-                        val request = call.receive<PostRequest<DictionaryItemJson>>()
+                        val request = call.receive<PostRequest.DictionaryItemJson>()
                         dictionaryController.delete(request.data)
                         call.respond(PostResult.Success<Nothing>())
                     } catch (e: Throwable) {
@@ -135,7 +131,7 @@ fun Application.module() {
 
             post("update") {
                 try {
-                    val request = call.receive<PostRequest<DepotItemJson>>()
+                    val request = call.receive<PostRequest.DepotItemJson>()
                     val depotItem = depotsController.update(request.data)
                     call.respond(PostResult.Success(DepotItemJson(depotItem)))
                 } catch (e: Throwable) {
@@ -145,7 +141,7 @@ fun Application.module() {
 
             post("new") {
                 try {
-                    val request = call.receive<PostRequest<DepotItemJson>>()
+                    val request = call.receive<PostRequest.DepotItemJson>()
                     val depotItem = depotsController.createNew(request.data)
                     call.respond(PostResult.Success(DepotItemJson(depotItem)))
                 } catch (e: Throwable) {
@@ -155,7 +151,7 @@ fun Application.module() {
 
             post("delete") {
                 try {
-                    val request = call.receive<PostRequest<DepotItemJson>>()
+                    val request = call.receive<PostRequest.DepotItemJson>()
                     depotsController.delete(request.data)
                     call.respond(PostResult.Success<Nothing>())
                 } catch (e: Throwable) {
@@ -173,7 +169,7 @@ fun Application.module() {
             route("new") {
                 post {
                     try {
-                        val request = call.receive<PostRequest<RetireItemJson>>()
+                        val request = call.receive<PostRequest.RetireItemJson>()
                         val retireItem = retiresController.createNew(request.data)
                         call.respond(PostResult.Success(RetireItemJson(retireItem)))
                     } catch (e: Throwable) {
@@ -185,7 +181,7 @@ fun Application.module() {
             route("update") {
                 post {
                     try {
-                        val request = call.receive<PostRequest<RetireItemJson>>()
+                        val request = call.receive<PostRequest.RetireItemJson>()
                         val retireItem = retiresController.update(request.data)
                         call.respond(PostResult.Success(RetireItemJson(retireItem)))
                     } catch (e: Throwable) {
@@ -197,7 +193,7 @@ fun Application.module() {
             route("delete") {
                 post {
                     try {
-                        val request = call.receive<PostRequest<RetireItemJson>>()
+                        val request = call.receive<PostRequest.RetireItemJson>()
                         retiresController.delete(request.data)
                         call.respond(PostResult.Success<Nothing>())
                     } catch (e: Throwable) {
@@ -236,7 +232,7 @@ fun Application.module() {
 
             post("update") {
                 try {
-                    val request = call.receive<PostRequest<TrashContainerAreasJson>>()
+                    val request = call.receive<PostRequest.TrashContainerAreasJson>()
                     val trashContainerItem = trashController.update(request.data.trashContainer)
                     areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, request.data.areasId)
                     call.respond(PostResult.Success(TrashContainerJson(trashContainerItem)))
@@ -247,7 +243,7 @@ fun Application.module() {
 
             post("new") {
                 try {
-                    val request = call.receive<PostRequest<TrashContainerAreasJson>>()
+                    val request = call.receive<PostRequest.TrashContainerAreasJson>()
                     val trashContainerItem = trashController.new(request.data.trashContainer)
                     areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, request.data.areasId)
                     call.respond(PostResult.Success(TrashContainerJson(trashContainerItem)))
@@ -258,7 +254,7 @@ fun Application.module() {
 
             post("delete") {
                 try {
-                    val request = call.receive<PostRequest<TrashContainerJson>>()
+                    val request = call.receive<PostRequest.TrashContainerJson>()
                     trashController.delete(request.data)
                     call.respond(PostResult.Success<Nothing>())
                 } catch (e: Throwable) {
@@ -276,7 +272,7 @@ fun Application.module() {
             route("update") {
                 post {
                     try {
-                        val request = call.receive<PostRequest<AreaItemJson>>()
+                        val request = call.receive<PostRequest.AreaItemJson>()
                         val areaItem = areasController.update(request.data)
                         call.respond(PostResult.Success(AreaItemJson(areaItem)))
                     } catch (e: Throwable) {
@@ -289,21 +285,29 @@ fun Application.module() {
         route("/user") {
             post("login") {
                 try {
-                    val userJson = call.receive<UserItemJson>()
-                    val token = usersController.login(userJson)
-                    call.respond(PostResult.Success(token))
+                    val loginRequest = call.receive<LoginRequest>()
+                    val loginResponse = usersController.login(loginRequest)
+                    call.respond(PostResult.Success(loginResponse))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
             }
         }
 
-        route("/crypt") {
-            get("en/{text}") {
-                val text = call.parameters["text"]!!
-                call.respond(Crypt.encrypt(text))
+        //TODO working on
+        /*route("/admin") {
+            route("users") {
+                post("list") {
+                    try {
+                        call.receive<PostRequest.NoDataAdmin>()
+                        val users = usersController.getUsers()
+                        call.respond(users.map { UserItemJson(it) })
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
             }
-        }
+        }*/
     }
 }
 

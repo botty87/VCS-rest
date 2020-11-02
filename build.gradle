@@ -18,7 +18,7 @@ apply plugin: 'com.bmuschko.tomcat'
 apply plugin: 'application'
 
 group 'com.vcs'
-//version '1.1.0'
+//version '1.2'
 mainClassName = "io.ktor.server.netty.EngineMain"
 
 webAppDirName = 'webapp'
@@ -55,6 +55,7 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "io.ktor:ktor-server-core:$ktor_version"
     implementation "io.ktor:ktor-jackson:$ktor_version"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.3"
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 
     implementation "com.zaxxer:HikariCP:3.4.5"

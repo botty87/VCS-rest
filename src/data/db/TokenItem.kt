@@ -4,7 +4,6 @@ package com.vcs.data.db
 import com.vcs.data.dbTables.Tokens
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
-import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit

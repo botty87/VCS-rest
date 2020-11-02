@@ -2,10 +2,10 @@ package controllers.areas
 
 import com.vcs.data.dbTables.Areas
 import com.vcs.data.json.AreaItemJson
+import controllers.referencedTables.areasCalendar.AreasCalendarController
 import data.db.AreaItem
 import data.db.DepotItem
 import data.db.TrashContainerItem
-import controllers.referencedTables.areasCalendar.AreasCalendarController
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.KoinComponent

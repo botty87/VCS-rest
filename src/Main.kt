@@ -1,8 +1,10 @@
 package com.vcs
 
-import io.ktor.application.Application
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
+import io.ktor.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+
+const val IS_RELEASE = false
 
 const val IS_RELEASE = true;
 

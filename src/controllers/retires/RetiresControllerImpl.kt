@@ -3,14 +3,8 @@ package controllers.retires
 import com.vcs.data.json.RetireItemJson
 import data.db.RetireItem
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.ZoneId
 
 class RetiresControllerImpl: RetiresController {
-    private val zone by lazy {
-        ZoneId.getAvailableZoneIds().first {
-            it.contains("rome", true) || it.contains("italy", true)
-        }
-    }
 
     override fun getAll(): List<RetireItem> {
         return transaction {

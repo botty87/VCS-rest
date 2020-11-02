@@ -1,6 +1,6 @@
 package com.vcs.controllers.users
 
-import com.vcs.IS_RELEASE
+import com.vcs.EnvConstants.IS_RELEASE
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.data.db.UserItem
 import com.vcs.data.dbTables.Users

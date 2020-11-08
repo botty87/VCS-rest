@@ -2,6 +2,7 @@ package com.vcs
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.vcs.controllers.advices.AdvicesController
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
 import com.vcs.data.dbTables.*
@@ -71,6 +72,7 @@ fun Application.module() {
     val areasController: AreasController by inject()
     val areaTrashContainersController: AreasTrashContainersController by inject()
     val usersController: UsersController by inject()
+    val advicesController: AdvicesController by inject()
 
     routing {
         get("/init") {
@@ -294,6 +296,13 @@ fun Application.module() {
             }
         }
 
+        route("/advices") {
+            get() {
+                val advices = advicesController.getAll().map { AdviceItemJson(it) }
+                call.respond(advices)
+            }
+        }
+
         //TODO working on
         /*route("/admin") {
             route("users") {
@@ -316,6 +325,7 @@ private fun initDB() {
     val ds = HikariDataSource(config)
     Database.connect(ds)
     transaction {
-        SchemaUtils.createMissingTablesAndColumns(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers, Retires, TrashContainers, Users, Tokens)
+        SchemaUtils.createMissingTablesAndColumns(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers,
+                Retires, TrashContainers, Users, Tokens, Advices, AdvicesAreas)
     }
 }

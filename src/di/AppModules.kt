@@ -1,5 +1,7 @@
 package com.vcs.di
 
+import com.vcs.controllers.advices.AdvicesController
+import com.vcs.controllers.advices.AdvicesControllerImpl
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.controllers.tokens.TokensControllerImpl
 import com.vcs.controllers.trashContainers.TrashContainersController
@@ -30,4 +32,5 @@ val controllersModule = module {
     single<AreasTrashContainersController> { AreasTrashContainersControllerImpl() }
     single<TokensController> { TokensControllerImpl() }
     single<UsersController> { UsersControllerImp() }
+    single<AdvicesController> { AdvicesControllerImpl() }
 }

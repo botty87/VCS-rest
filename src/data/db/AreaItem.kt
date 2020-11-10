@@ -1,6 +1,8 @@
 package data.db
 
 import com.vcs.data.base.AreaItemBase
+import com.vcs.data.db.AdviceItem
+import com.vcs.data.dbTables.AdvicesAreas
 import com.vcs.data.dbTables.Areas
 import com.vcs.data.dbTables.AreasTrashContainers
 import controllers.referencedTables.areasCalendar.AreasCalendarController
@@ -17,6 +19,7 @@ class AreaItem(id: EntityID<Int>) : IntEntity(id), AreaItemBase, KoinComponent {
     override var towns by Areas.towns
     var depot by DepotItem optionalReferencedOn Areas.depot
     var trashContainers by TrashContainerItem via AreasTrashContainers
+    var advices by AdviceItem via AdvicesAreas
 
     val calendarMap: Map<Byte, Collection<Int>>
         get() = transaction {

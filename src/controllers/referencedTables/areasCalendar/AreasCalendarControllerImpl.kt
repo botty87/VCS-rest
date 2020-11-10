@@ -12,12 +12,6 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class AreasCalendarControllerImpl: AreasCalendarController {
-    override fun clear() {
-        transaction {
-            AreasCalendar.deleteAll()
-        }
-    }
-
     override fun setAreaRetires(areaItem: AreaItem, retires: Map<Byte, Collection<Int>>) {
         transaction {
             AreasCalendar.deleteWhere {

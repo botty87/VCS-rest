@@ -271,15 +271,50 @@ fun Application.module() {
                 call.respond(areas)
             }
 
-            route("update") {
-                post {
-                    try {
-                        val request = call.receive<PostRequest.AreaItemJson>()
-                        val areaItem = areasController.update(request.data)
-                        call.respond(PostResult.Success(AreaItemJson(areaItem)))
-                    } catch (e: Throwable) {
-                        call.respond(PostResult.Error(e.localizedMessage))
-                    }
+            post("update") {
+                try {
+                    val request = call.receive<PostRequest.AreaItemJson>()
+                    val areaItem = areasController.update(request.data)
+                    call.respond(PostResult.Success(AreaItemJson(areaItem)))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+        }
+
+        route("/advices") {
+            get {
+                val advices = advicesController.getAll().map { AdviceItemJson(it) }
+                call.respond(advices)
+            }
+
+            post("update") {
+                try {
+                    val request = call.receive<PostRequest.AdviceItemJson>()
+                    val adviceItem = advicesController.update(request.data)
+                    call.respond(PostResult.Success(AdviceItemJson(adviceItem)))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+
+            post("new") {
+                try {
+                    val request = call.receive<PostRequest.AdviceItemJson>()
+                    val adviceItem = advicesController.createNew(request.data)
+                    call.respond(PostResult.Success(AdviceItemJson(adviceItem)))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+
+            post("delete") {
+                try {
+                    val request = call.receive<PostRequest.AdviceItemJson>()
+                    advicesController.delete(request.data)
+                    call.respond(PostResult.Success<Nothing>())
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
                 }
             }
         }
@@ -293,13 +328,6 @@ fun Application.module() {
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
-            }
-        }
-
-        route("/advices") {
-            get() {
-                val advices = advicesController.getAll().map { AdviceItemJson(it) }
-                call.respond(advices)
             }
         }
 
@@ -323,7 +351,7 @@ fun Application.module() {
 private fun initDB() {
     val config = HikariConfig("/hikari.properties")
     val ds = HikariDataSource(config)
-    Database.connect(ds)
+    Database.connect(ds).useNestedTransactions = true
     transaction {
         SchemaUtils.createMissingTablesAndColumns(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers,
                 Retires, TrashContainers, Users, Tokens, Advices, AdvicesAreas)

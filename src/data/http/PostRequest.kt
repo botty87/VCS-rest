@@ -13,6 +13,7 @@ sealed class PostRequest(token: String) : KoinComponent {
     class RetireItemJson(token: String, val data: com.vcs.data.json.RetireItemJson) : PostRequest(token)
     class TrashContainerAreasJson(token: String, val data: com.vcs.data.json.TrashContainerAreasJson) : PostRequest(token)
     class TrashContainerJson(token: String, val data: com.vcs.data.json.TrashContainerJson) : PostRequest(token)
+    class AdviceItemJson(token: String, val data: com.vcs.data.json.AdviceItemJson) : PostRequest(token)
 
     init {
         val tokenController: TokensController = get()

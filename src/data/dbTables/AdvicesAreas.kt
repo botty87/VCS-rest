@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package com.vcs.data.dbTables
 
 import org.jetbrains.exposed.sql.ReferenceOption

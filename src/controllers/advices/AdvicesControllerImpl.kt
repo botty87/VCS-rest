@@ -37,7 +37,7 @@ class AdvicesControllerImpl: AdvicesController, KoinComponent {
         transaction {
             advice.areas = AreaItem.forIds(adviceItemJson.areas)
         }
-        return advice;
+        return advice
     }
 
     override fun delete(adviceItemJson: AdviceItemJson) {

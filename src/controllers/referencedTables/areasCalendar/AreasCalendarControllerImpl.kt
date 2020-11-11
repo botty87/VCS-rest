@@ -7,7 +7,6 @@ import com.vcs.tools.WeekDayConverter
 import data.db.AreaCalendarItem
 import data.db.AreaItem
 import data.db.RetireItem
-import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 

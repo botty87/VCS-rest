@@ -13,7 +13,7 @@ class AreaItemJson(
         var calendarMap: Map<Byte, Collection<Int>>,
 ) : AreaItemBase {
     lateinit var trashContainerIds: List<Int>
-    lateinit var advices: List<Int>
+    lateinit var adviceIds: List<Int>
 
     constructor(areaItem: AreaItem) : this(
         areaItem.id.value,
@@ -25,7 +25,7 @@ class AreaItemJson(
         transaction {
             depotId = areaItem.depot?.id?.value
             trashContainerIds = areaItem.trashContainers.map { it.id.value }
-            advices = areaItem.advices.map { it.id.value }
+            adviceIds = areaItem.advices.map { it.id.value }
         }
     }
 }

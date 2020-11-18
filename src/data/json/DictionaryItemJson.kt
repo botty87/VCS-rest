@@ -16,3 +16,5 @@ class DictionaryItemJson(
             dictionaryItem.tagId
     )
 }
+
+fun DictionaryItem.toJson() = DictionaryItemJson(this)

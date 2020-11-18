@@ -3,13 +3,14 @@ package com.vcs
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.vcs.controllers.advices.AdvicesController
+import com.vcs.controllers.mobileAppData.MobileAppDataController
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
 import com.vcs.data.dbTables.*
 import com.vcs.data.http.LoginRequest
 import com.vcs.data.http.PostRequest
 import com.vcs.data.http.PostResult
-import com.vcs.data.json.*
+import com.vcs.data.json.toJson
 import com.vcs.di.controllersModule
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -73,6 +74,7 @@ fun Application.module() {
     val areaTrashContainersController: AreasTrashContainersController by inject()
     val usersController: UsersController by inject()
     val advicesController: AdvicesController by inject()
+    val mobileAppDataController: MobileAppDataController by inject()
 
     routing {
         get("/init") {
@@ -84,7 +86,7 @@ fun Application.module() {
 
         route("/dictionary") {
             get {
-                val dictionary = dictionaryController.getAll().map { DictionaryItemJson(it) }
+                val dictionary = dictionaryController.getAll().map { it.toJson() }
                 call.respond(dictionary)
             }
 
@@ -93,7 +95,7 @@ fun Application.module() {
                     try {
                         val request = call.receive<PostRequest.DictionaryItemJson>()
                         val dictionaryItem = dictionaryController.createNew(request.data)
-                        call.respond(PostResult.Success(DictionaryItemJson(dictionaryItem)))
+                        call.respond(PostResult.Success(dictionaryItem.toJson()))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }
@@ -105,7 +107,7 @@ fun Application.module() {
                     try {
                         val request = call.receive<PostRequest.DictionaryItemJson>()
                         val dictionaryItem = dictionaryController.update(request.data)
-                        call.respond(PostResult.Success(DictionaryItemJson(dictionaryItem)))
+                        call.respond(PostResult.Success(dictionaryItem.toJson()))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }
@@ -127,7 +129,7 @@ fun Application.module() {
 
         route("/depots") {
             get {
-                val depots = depotsController.getAll().map { DepotItemJson(it) }
+                val depots = depotsController.getAll().map { it.toJson() }
                 call.respond(depots)
             }
 
@@ -135,7 +137,7 @@ fun Application.module() {
                 try {
                     val request = call.receive<PostRequest.DepotItemJson>()
                     val depotItem = depotsController.update(request.data)
-                    call.respond(PostResult.Success(DepotItemJson(depotItem)))
+                    call.respond(PostResult.Success(depotItem.toJson()))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
@@ -145,7 +147,7 @@ fun Application.module() {
                 try {
                     val request = call.receive<PostRequest.DepotItemJson>()
                     val depotItem = depotsController.createNew(request.data)
-                    call.respond(PostResult.Success(DepotItemJson(depotItem)))
+                    call.respond(PostResult.Success(depotItem.toJson()))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
@@ -164,7 +166,7 @@ fun Application.module() {
 
         route("/retires") {
             get {
-                val retires = retiresController.getAll().map { RetireItemJson(it) }
+                val retires = retiresController.getAll().map { it.toJson()}
                 call.respond(retires)
             }
 
@@ -173,7 +175,7 @@ fun Application.module() {
                     try {
                         val request = call.receive<PostRequest.RetireItemJson>()
                         val retireItem = retiresController.createNew(request.data)
-                        call.respond(PostResult.Success(RetireItemJson(retireItem)))
+                        call.respond(PostResult.Success(retireItem.toJson()))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }
@@ -185,7 +187,7 @@ fun Application.module() {
                     try {
                         val request = call.receive<PostRequest.RetireItemJson>()
                         val retireItem = retiresController.update(request.data)
-                        call.respond(PostResult.Success(RetireItemJson(retireItem)))
+                        call.respond(PostResult.Success(retireItem.toJson()))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }
@@ -207,7 +209,7 @@ fun Application.module() {
 
         route("/trash_conts") {
             get {
-                val trashConts = trashController.getAll().map { TrashContainerJson(it) }
+                val trashConts = trashController.getAll().map { it.toJson() }
                 call.respond(trashConts)
             }
 
@@ -215,7 +217,7 @@ fun Application.module() {
                 try {
                     val areaId = call.parameters["id"]!!.toInt()
                     val trashContainers = areaTrashContainersController.getTrashContainersForArea(areaId)
-                            .map { TrashContainerJson(it) }
+                            .map { it.toJson() }
                     call.respond(trashContainers)
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
@@ -237,7 +239,7 @@ fun Application.module() {
                     val request = call.receive<PostRequest.TrashContainerAreasJson>()
                     val trashContainerItem = trashController.update(request.data.trashContainer)
                     areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, request.data.areasId)
-                    call.respond(PostResult.Success(TrashContainerJson(trashContainerItem)))
+                    call.respond(PostResult.Success(trashContainerItem.toJson()))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
@@ -248,7 +250,7 @@ fun Application.module() {
                     val request = call.receive<PostRequest.TrashContainerAreasJson>()
                     val trashContainerItem = trashController.new(request.data.trashContainer)
                     areaTrashContainersController.setTrashContainerAndAreas(trashContainerItem, request.data.areasId)
-                    call.respond(PostResult.Success(TrashContainerJson(trashContainerItem)))
+                    call.respond(PostResult.Success(trashContainerItem.toJson()))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
@@ -267,7 +269,7 @@ fun Application.module() {
 
         route("/areas") {
             get {
-                val areas = areasController.getAll().map { AreaItemJson(it) }
+                val areas = areasController.getAll().map { it.toJson() }
                 call.respond(areas)
             }
 
@@ -275,7 +277,7 @@ fun Application.module() {
                 try {
                     val request = call.receive<PostRequest.AreaItemJson>()
                     val areaItem = areasController.update(request.data)
-                    call.respond(PostResult.Success(AreaItemJson(areaItem)))
+                    call.respond(PostResult.Success(areaItem.toJson()))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
@@ -284,7 +286,7 @@ fun Application.module() {
 
         route("/advices") {
             get {
-                val advices = advicesController.getAll().map { AdviceItemJson(it) }
+                val advices = advicesController.getAll().map { it.toJson() }
                 call.respond(advices)
             }
 
@@ -292,7 +294,7 @@ fun Application.module() {
                 try {
                     val request = call.receive<PostRequest.AdviceItemJson>()
                     val adviceItem = advicesController.update(request.data)
-                    call.respond(PostResult.Success(AdviceItemJson(adviceItem)))
+                    call.respond(PostResult.Success(adviceItem.toJson()))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
@@ -302,7 +304,7 @@ fun Application.module() {
                 try {
                     val request = call.receive<PostRequest.AdviceItemJson>()
                     val adviceItem = advicesController.createNew(request.data)
-                    call.respond(PostResult.Success(AdviceItemJson(adviceItem)))
+                    call.respond(PostResult.Success(adviceItem.toJson()))
                 } catch (e: Throwable) {
                     call.respond(PostResult.Error(e.localizedMessage))
                 }
@@ -331,6 +333,10 @@ fun Application.module() {
             }
         }
 
+        get("/mobApp") {
+            call.respond(mobileAppDataController.get().toJson())
+        }
+
         //TODO working on
         /*route("/admin") {
             route("users") {
@@ -354,6 +360,6 @@ private fun initDB() {
     Database.connect(ds).useNestedTransactions = true
     transaction {
         SchemaUtils.createMissingTablesAndColumns(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers,
-                Retires, TrashContainers, Users, Tokens, Advices, AdvicesAreas)
+                Retires, TrashContainers, Users, Tokens, Advices, AdvicesAreas, MobileAppData)
     }
 }

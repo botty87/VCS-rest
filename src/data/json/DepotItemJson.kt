@@ -22,3 +22,5 @@ class DepotItemJson(
             depotItem.shareDepot,
     )
 }
+
+fun DepotItem.toJson(): DepotItemJson = DepotItemJson(this)

@@ -24,3 +24,5 @@ class AdviceItemJson(
         }
     }
 }
+
+fun AdviceItem.toJson(): AdviceItemJson = AdviceItemJson(this)

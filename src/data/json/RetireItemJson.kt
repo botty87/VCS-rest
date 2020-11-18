@@ -21,3 +21,5 @@ class RetireItemJson(
             retireItem.name
     )
 }
+
+fun RetireItem.toJson() = RetireItemJson(this)

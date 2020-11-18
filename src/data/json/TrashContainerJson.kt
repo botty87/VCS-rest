@@ -16,3 +16,5 @@ class TrashContainerJson(
             trashContainerItem.longitude,
     )
 }
+
+fun TrashContainerItem.toJson() = TrashContainerJson(this)

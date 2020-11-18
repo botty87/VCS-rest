@@ -29,3 +29,5 @@ class AreaItemJson(
         }
     }
 }
+
+fun AreaItem.toJson() : AreaItemJson = AreaItemJson(this)

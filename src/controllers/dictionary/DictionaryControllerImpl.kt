@@ -10,7 +10,7 @@ class DictionaryControllerImpl: DictionaryController {
 
     override fun getAll(): List<DictionaryItem> {
         return transaction {
-            DictionaryItem.all().toList()
+            DictionaryItem.all().sortedBy { it.name.toLowerCase() }
         }
     }
 

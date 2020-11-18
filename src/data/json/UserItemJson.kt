@@ -8,3 +8,5 @@ class UserItemJson(userItem: UserItem) : UserItemBase {
     override var active: Boolean = userItem.active
     override var admin: Boolean = userItem.admin
 }
+
+fun UserItem.toJson() = UserItemJson(this)

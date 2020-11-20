@@ -9,6 +9,7 @@ class AreaItemJson(
         val id: Int,
         override var name: String,
         override var towns: String?,
+        override var separatedMulti: Boolean,
         var depotId: Int? = null,
         var calendarMap: Map<Byte, Collection<Int>>,
 ) : AreaItemBase {
@@ -19,7 +20,8 @@ class AreaItemJson(
         areaItem.id.value,
         areaItem.name,
         areaItem.towns,
-            null,
+        areaItem.separatedMulti,
+        null,
         areaItem.calendarMap
     ) {
         transaction {

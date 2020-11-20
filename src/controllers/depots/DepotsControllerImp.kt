@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class DepotsControllerImp: DepotsController {
     override fun getAll(): List<DepotItem> {
         return transaction {
-            DepotItem.all().toList()
+            DepotItem.all().sortedBy { it.name.toLowerCase() }
         }
     }
 

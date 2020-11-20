@@ -17,6 +17,7 @@ class AreaItem(id: EntityID<Int>) : IntEntity(id), AreaItemBase, KoinComponent {
     companion object : IntEntityClass<AreaItem>(Areas)
     override var name by Areas.name
     override var towns by Areas.towns
+    override var separatedMulti by Areas.separatedMulti
     var depot by DepotItem optionalReferencedOn Areas.depot
     var trashContainers by TrashContainerItem via AreasTrashContainers
     var advices by AdviceItem via AdvicesAreas

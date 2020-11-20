@@ -16,7 +16,7 @@ class AreasControllerImpl: AreasController, KoinComponent {
 
     override fun getAll(): List<AreaItem> {
         return transaction {
-            AreaItem.all().toList()
+            AreaItem.all().sortedBy { it.name.toLowerCase() }
         }
     }
 
@@ -31,6 +31,7 @@ class AreasControllerImpl: AreasController, KoinComponent {
             AreaItem[areaItemJson.id].apply {
                 name = areaItemJson.name
                 towns = areaItemJson.towns
+                separatedMulti = areaItemJson.separatedMulti
                 depot = areaItemJson.depotId?.run{ DepotItem[this] }
                 trashContainers = TrashContainerItem.forIds(areaItemJson.trashContainerIds)
                 areasCalendarController.setAreaRetires(this, areaItemJson.calendarMap)

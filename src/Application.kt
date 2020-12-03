@@ -3,7 +3,7 @@ package com.vcs
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.vcs.controllers.advices.AdvicesController
-import com.vcs.controllers.mobileAppData.MobileAppDataController
+import com.vcs.controllers.mobileAppData.MobileAppVersionController
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
 import com.vcs.data.dbTables.*
@@ -74,7 +74,7 @@ fun Application.module() {
     val areaTrashContainersController: AreasTrashContainersController by inject()
     val usersController: UsersController by inject()
     val advicesController: AdvicesController by inject()
-    val mobileAppDataController: MobileAppDataController by inject()
+    val mobileAppVersionController: MobileAppVersionController by inject()
 
     routing {
         get("/init") {
@@ -333,8 +333,8 @@ fun Application.module() {
             }
         }
 
-        get("/mobApp") {
-            call.respond(mobileAppDataController.get().toJson())
+        get("/mobAppVer") {
+            call.respond(mobileAppVersionController.get().toJson())
         }
 
         //TODO working on
@@ -360,6 +360,6 @@ private fun initDB() {
     Database.connect(ds).useNestedTransactions = true
     transaction {
         SchemaUtils.createMissingTablesAndColumns(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers,
-                Retires, TrashContainers, Users, Tokens, Advices, AdvicesAreas, MobileAppData)
+                Retires, TrashContainers, Users, Tokens, Advices, AdvicesAreas, MobileAppVersion)
     }
 }

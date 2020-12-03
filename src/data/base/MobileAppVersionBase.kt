@@ -1,7 +1,7 @@
 package com.vcs.data.base
 
-interface MobileAppDataBase {
-    var minVersion: Int
+interface MobileAppVersionBase {
+    var currentVersion: Int
     var minForceVersion: Int
 
     companion object {

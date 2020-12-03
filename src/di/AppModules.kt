@@ -2,8 +2,8 @@ package com.vcs.di
 
 import com.vcs.controllers.advices.AdvicesController
 import com.vcs.controllers.advices.AdvicesControllerImpl
-import com.vcs.controllers.mobileAppData.MobileAppDataController
-import com.vcs.controllers.mobileAppData.MobileAppDataControllerImpl
+import com.vcs.controllers.mobileAppData.MobileAppVersionController
+import com.vcs.controllers.mobileAppData.MobileAppVersionControllerImpl
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.controllers.tokens.TokensControllerImpl
 import com.vcs.controllers.trashContainers.TrashContainersController
@@ -35,5 +35,5 @@ val controllersModule = module {
     single<TokensController> { TokensControllerImpl() }
     single<UsersController> { UsersControllerImp() }
     single<AdvicesController> { AdvicesControllerImpl() }
-    single<MobileAppDataController> { MobileAppDataControllerImpl() }
+    single<MobileAppVersionController> { MobileAppVersionControllerImpl() }
 }

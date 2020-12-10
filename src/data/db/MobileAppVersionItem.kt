@@ -11,4 +11,5 @@ class MobileAppVersionItem(id: EntityID<Int>) : IntEntity(id), MobileAppVersionB
 
     override var currentVersion by MobileAppVersion.currentVersion
     override var minForceVersion by MobileAppVersion.minForceVersion
+    override var itunesVersion: String? = null
 }

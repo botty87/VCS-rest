@@ -3,7 +3,7 @@ package com.vcs
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.vcs.controllers.advices.AdvicesController
-import com.vcs.controllers.mobileAppData.MobileAppVersionController
+import com.vcs.controllers.mobileAppVersion.MobileAppVersionController
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
 import com.vcs.data.dbTables.*
@@ -333,8 +333,9 @@ fun Application.module() {
             }
         }
 
-        get("/mobAppVer") {
-            call.respond(mobileAppVersionController.get().toJson())
+        get("/mobAppVer/{iOSVersionNeeded}") {
+            val iOSVersionNeeded = call.parameters["iOSVersionNeeded"].toBoolean()
+            call.respond(mobileAppVersionController.get(iOSVersionNeeded).toJson())
         }
 
         //TODO working on

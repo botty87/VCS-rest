@@ -1,7 +1,7 @@
-package com.vcs.controllers.mobileAppData
+package com.vcs.controllers.mobileAppVersion
 
 import com.vcs.data.db.MobileAppVersionItem
 
 interface MobileAppVersionController {
-    fun get(): MobileAppVersionItem
+    fun get(iOSVersionNeeded: Boolean): MobileAppVersionItem
 }

@@ -9,7 +9,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 class MobileAppVersionItem(id: EntityID<Int>) : IntEntity(id), MobileAppVersionBase {
     companion object : IntEntityClass<MobileAppVersionItem>(MobileAppVersion)
 
-    override var currentVersion by MobileAppVersion.currentVersion
     override var minForceVersion by MobileAppVersion.minForceVersion
     override var itunesVersion: String? = null
 }

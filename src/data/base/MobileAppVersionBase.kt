@@ -1,7 +1,6 @@
 package com.vcs.data.base
 
 interface MobileAppVersionBase {
-    var currentVersion: Int
     var minForceVersion: Int
     var itunesVersion: String?
 

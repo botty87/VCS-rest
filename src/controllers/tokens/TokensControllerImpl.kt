@@ -59,7 +59,7 @@ class TokensControllerImpl: TokensController {
                 return@transaction TokenCheckResult.NotActive
             }
 
-            TokenCheckResult.Active(tokenItem.user.active)
+            TokenCheckResult.Active(tokenItem.user.admin)
         }
     }
 }

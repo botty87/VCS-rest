@@ -10,6 +10,7 @@ import com.vcs.data.dbTables.*
 import com.vcs.data.http.LoginRequest
 import com.vcs.data.http.PostRequest
 import com.vcs.data.http.PostResult
+import com.vcs.data.json.UserItemJson
 import com.vcs.data.json.toJson
 import com.vcs.di.controllersModule
 import com.zaxxer.hikari.HikariConfig
@@ -338,8 +339,7 @@ fun Application.module() {
             call.respond(mobileAppVersionController.get(iOSVersionNeeded).toJson())
         }
 
-        //TODO working on
-        /*route("/admin") {
+        route("/admin") {
             route("users") {
                 post("list") {
                     try {
@@ -351,7 +351,7 @@ fun Application.module() {
                     }
                 }
             }
-        }*/
+        }
     }
 }
 

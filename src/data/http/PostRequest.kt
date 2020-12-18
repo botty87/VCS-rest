@@ -14,11 +14,26 @@ sealed class PostRequest(token: String) : KoinComponent {
     class TrashContainerAreasJson(token: String, val data: com.vcs.data.json.TrashContainerAreasJson) : PostRequest(token)
     class TrashContainerJson(token: String, val data: com.vcs.data.json.TrashContainerJson) : PostRequest(token)
     class AdviceItemJson(token: String, val data: com.vcs.data.json.AdviceItemJson) : PostRequest(token)
+    class NoDataAdmin(token: String) : PostRequest(token) {
+        override fun checkToken(token: String): TokenCheckResult.Active {
+            val tokenResult = super.checkToken(token)
+            if(!tokenResult.admin) {
+                throw TokenExceptions.NotAdmin();
+            }
+            return tokenResult;
+        }
+    }
 
     init {
+        checkToken(token)
+    }
+
+    open fun checkToken(token: String): TokenCheckResult.Active {
         val tokenController: TokensController = get()
-        if (tokenController.checkToken(token) == TokenCheckResult.NotActive) {
-             throw TokenExceptions.NotValid()
+        val tokenResult = tokenController.checkToken(token)
+        if (tokenResult == TokenCheckResult.NotActive) {
+            throw TokenExceptions.NotValid()
         }
+        return tokenResult as TokenCheckResult.Active
     }
 }

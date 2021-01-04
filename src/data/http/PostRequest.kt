@@ -1,5 +1,6 @@
 package com.vcs.data.http
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.data.http.token.TokenCheckResult
 import com.vcs.exceptions.TokenExceptions
@@ -7,14 +8,16 @@ import org.koin.core.KoinComponent
 import org.koin.core.get
 
 sealed class PostRequest(token: String) : KoinComponent {
-    class AreaItemJson(token: String, val data: com.vcs.data.json.AreaItemJson) : PostRequest(token)
-    class DepotItemJson(token: String, val data: com.vcs.data.json.DepotItemJson) : PostRequest(token)
-    class DictionaryItemJson(token: String, val data: com.vcs.data.json.DictionaryItemJson) : PostRequest(token)
-    class RetireItemJson(token: String, val data: com.vcs.data.json.RetireItemJson) : PostRequest(token)
-    class TrashContainerAreasJson(token: String, val data: com.vcs.data.json.TrashContainerAreasJson) : PostRequest(token)
-    class TrashContainerJson(token: String, val data: com.vcs.data.json.TrashContainerJson) : PostRequest(token)
-    class AdviceItemJson(token: String, val data: com.vcs.data.json.AdviceItemJson) : PostRequest(token)
-    class NoDataAdmin(token: String) : PostRequest(token) {
+    class AreaItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.AreaItemJson) : PostRequest(token)
+    class DepotItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.DepotItemJson) : PostRequest(token)
+    class DictionaryItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.DictionaryItemJson) : PostRequest(token)
+    class RetireItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.RetireItemJson) : PostRequest(token)
+    class TrashContainerAreasJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.TrashContainerAreasJson) : PostRequest(token)
+    class TrashContainerJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.TrashContainerJson) : PostRequest(token)
+    class AdviceItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.AdviceItemJson) : PostRequest(token)
+
+    //ADMIN REQUESTS
+    open class NoDataAdmin(@JsonProperty("token") token: String) : PostRequest(token) {
         override fun checkToken(token: String): TokenCheckResult.Active {
             val tokenResult = super.checkToken(token)
             if(!tokenResult.admin) {
@@ -23,6 +26,8 @@ sealed class PostRequest(token: String) : KoinComponent {
             return tokenResult;
         }
     }
+    class ChangePassword(@JsonProperty("token") token: String, @JsonProperty("pwd") val passwordHash: String) : NoDataAdmin(token)
+    class NewUserItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.NewUserItemJson) : NoDataAdmin(token)
 
     init {
         checkToken(token)

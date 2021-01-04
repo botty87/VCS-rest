@@ -345,7 +345,25 @@ fun Application.module() {
                     try {
                         call.receive<PostRequest.NoDataAdmin>()
                         val users = usersController.getUsers()
-                        call.respond(users.map { UserItemJson(it) })
+                        call.respond(PostResult.Success(users.map { it.toJson() }))
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
+                post("changePwd") {
+                    try {
+                        val passwordRequest = call.receive<PostRequest.ChangePassword>()
+                        val users = usersController.getUsers()
+                        call.respond(PostResult.Success(users.map { UserItemJson(it) }))
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
+                post("addUser") {
+                    try {
+                        val passwordRequest = call.receive<PostRequest.ChangePassword>()
+                        val users = usersController.getUsers()
+                        call.respond(PostResult.Success(users.map { it.toJson() }))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }

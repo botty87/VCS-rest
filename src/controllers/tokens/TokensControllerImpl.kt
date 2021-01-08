@@ -62,4 +62,10 @@ class TokensControllerImpl: TokensController {
             TokenCheckResult.Active(tokenItem.user.admin)
         }
     }
+
+    override fun getUserIdForToken(token: String): Int {
+        return transaction {
+            TokenItem[token].user.id.value
+        }
+    }
 }

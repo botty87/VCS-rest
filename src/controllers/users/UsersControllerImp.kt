@@ -6,6 +6,8 @@ import com.vcs.data.db.UserItem
 import com.vcs.data.dbTables.Users
 import com.vcs.data.http.LoginRequest
 import com.vcs.data.json.LoginResponse
+import com.vcs.data.json.userItems.EditUserItemJson
+import com.vcs.data.json.userItems.UserPassItemJson
 import com.vcs.exceptions.LoginExceptions
 import com.vcs.tools.Crypt
 import org.jetbrains.exposed.sql.SortOrder
@@ -41,9 +43,44 @@ class UsersControllerImp: UsersController, KoinComponent {
         throw LoginExceptions.WrongPassword()
     }
 
-    override fun getUsers(): List<UserItem> {
+    override fun changePassword(userPassItemJson: UserPassItemJson) {
+        val password = Crypt.encrypt(userPassItemJson.password)
+        transaction {
+            UserItem[userPassItemJson.id].password = password
+        }
+    }
+
+    override fun getUsers(token: String): List<UserItem> {
+        val userId = tokensController.getUserIdForToken(token)
         return transaction {
-            UserItem.all().orderBy(Users.username to SortOrder.ASC).toList()
+            UserItem.find {
+                Users.id neq userId
+            }.orderBy(Users.username to SortOrder.ASC).toList()
+        }
+    }
+
+    override fun addEdit(userItemJson: EditUserItemJson): UserItem {
+        return transaction {
+            if(userItemJson.id == 0) {
+                UserItem.new {
+                    username = userItemJson.username
+                    active = userItemJson.active
+                    admin = userItemJson.admin
+                    password = Crypt.encrypt(userItemJson.password!!)
+                }
+            } else {
+                UserItem[userItemJson.id].apply {
+                    username = userItemJson.username
+                    active = userItemJson.active
+                    admin = userItemJson.admin
+                }
+            }
+        }
+    }
+
+    override fun delete(userItemJson: EditUserItemJson) {
+        transaction {
+            UserItem[userItemJson.id].delete()
         }
     }
 }

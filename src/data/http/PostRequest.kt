@@ -3,11 +3,12 @@ package com.vcs.data.http
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.data.http.token.TokenCheckResult
+import com.vcs.data.json.userItems.UserPassItemJson
 import com.vcs.exceptions.TokenExceptions
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
-sealed class PostRequest(token: String) : KoinComponent {
+sealed class PostRequest(val token: String) : KoinComponent {
     class AreaItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.AreaItemJson) : PostRequest(token)
     class DepotItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.DepotItemJson) : PostRequest(token)
     class DictionaryItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.DictionaryItemJson) : PostRequest(token)
@@ -26,8 +27,8 @@ sealed class PostRequest(token: String) : KoinComponent {
             return tokenResult;
         }
     }
-    class ChangePassword(@JsonProperty("token") token: String, @JsonProperty("pwd") val passwordHash: String) : NoDataAdmin(token)
-    class NewUserItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.NewUserItemJson) : NoDataAdmin(token)
+    class ChangePassword(@JsonProperty("token") token: String, val data: UserPassItemJson) : NoDataAdmin(token)
+    class UserItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.userItems.EditUserItemJson) : NoDataAdmin(token)
 
     init {
         checkToken(token)

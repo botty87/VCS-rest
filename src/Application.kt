@@ -10,8 +10,8 @@ import com.vcs.data.dbTables.*
 import com.vcs.data.http.LoginRequest
 import com.vcs.data.http.PostRequest
 import com.vcs.data.http.PostResult
-import com.vcs.data.json.UserItemJson
 import com.vcs.data.json.toJson
+import com.vcs.data.json.userItems.toJson
 import com.vcs.di.controllersModule
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -343,27 +343,36 @@ fun Application.module() {
             route("users") {
                 post("list") {
                     try {
-                        call.receive<PostRequest.NoDataAdmin>()
-                        val users = usersController.getUsers()
+                        val request = call.receive<PostRequest.NoDataAdmin>()
+                        val users = usersController.getUsers(request.token)
                         call.respond(PostResult.Success(users.map { it.toJson() }))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }
                 }
-                post("changePwd") {
+                post("add_edit") {
                     try {
-                        val passwordRequest = call.receive<PostRequest.ChangePassword>()
-                        val users = usersController.getUsers()
-                        call.respond(PostResult.Success(users.map { UserItemJson(it) }))
+                        val userRequest = call.receive<PostRequest.UserItemJson>()
+                        val user = usersController.addEdit(userRequest.data)
+                        call.respond(PostResult.Success(user.toJson()))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }
                 }
-                post("addUser") {
+                post("change_pwd") {
                     try {
-                        val passwordRequest = call.receive<PostRequest.ChangePassword>()
-                        val users = usersController.getUsers()
-                        call.respond(PostResult.Success(users.map { it.toJson() }))
+                        val userPass = call.receive<PostRequest.ChangePassword>()
+                        usersController.changePassword(userPass.data)
+                        call.respond(PostResult.Success<Nothing>())
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
+                post("delete") {
+                    try {
+                        val userRequest = call.receive<PostRequest.UserItemJson>()
+                        usersController.delete(userRequest.data)
+                        call.respond(PostResult.Success<Nothing>())
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }

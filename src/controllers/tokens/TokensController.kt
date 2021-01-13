@@ -7,5 +7,5 @@ import com.vcs.data.http.token.TokenCheckResult
 interface TokensController {
     fun create(user: UserItem) : TokenItem
     fun checkToken(token : String) : TokenCheckResult
-    fun getUserIdForToken(token: String) : Int
+    fun getUserForToken(token: String) : UserItem
 }

@@ -3,6 +3,7 @@ package com.vcs.data.http
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.data.http.token.TokenCheckResult
+import com.vcs.data.json.userItems.ChangePasswordItemJson
 import com.vcs.data.json.userItems.UserPassItemJson
 import com.vcs.exceptions.TokenExceptions
 import org.koin.core.KoinComponent
@@ -16,6 +17,7 @@ sealed class PostRequest(val token: String) : KoinComponent {
     class TrashContainerAreasJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.TrashContainerAreasJson) : PostRequest(token)
     class TrashContainerJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.TrashContainerJson) : PostRequest(token)
     class AdviceItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.AdviceItemJson) : PostRequest(token)
+    class ChangePassword(@JsonProperty("token") token: String, val data: ChangePasswordItemJson) : PostRequest(token)
 
     //ADMIN REQUESTS
     open class NoDataAdmin(@JsonProperty("token") token: String) : PostRequest(token) {
@@ -27,8 +29,9 @@ sealed class PostRequest(val token: String) : KoinComponent {
             return tokenResult;
         }
     }
-    class ChangePassword(@JsonProperty("token") token: String, val data: UserPassItemJson) : NoDataAdmin(token)
+    class SetPassword(@JsonProperty("token") token: String, val data: UserPassItemJson) : NoDataAdmin(token)
     class UserItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.userItems.EditUserItemJson) : NoDataAdmin(token)
+    class MobileAppVersionJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.MobileAppVersionJson) : NoDataAdmin(token)
 
     init {
         checkToken(token)

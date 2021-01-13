@@ -63,9 +63,9 @@ class TokensControllerImpl: TokensController {
         }
     }
 
-    override fun getUserIdForToken(token: String): Int {
+    override fun getUserForToken(token: String): UserItem {
         return transaction {
-            TokenItem[token].user.id.value
+            TokenItem[token].user
         }
     }
 }

@@ -361,8 +361,8 @@ fun Application.module() {
                 }
                 post("change_pwd") {
                     try {
-                        val userPass = call.receive<PostRequest.ChangePassword>()
-                        usersController.changePassword(userPass.data)
+                        val userPass = call.receive<PostRequest.SetPassword>()
+                        usersController.setPassword(userPass.data)
                         call.respond(PostResult.Success<Nothing>())
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
@@ -376,6 +376,29 @@ fun Application.module() {
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))
                     }
+                }
+            }
+            route("mobAppVer") {
+                post("set") {
+                    try {
+                        val mobAppVerRequest = call.receive<PostRequest.MobileAppVersionJson>()
+                        val mobAppVer = mobileAppVersionController.set(mobAppVerRequest.data)
+                        call.respond(PostResult.Success(mobAppVer.toJson()))
+                    } catch (e: Throwable) {
+                        call.respond(PostResult.Error(e.localizedMessage))
+                    }
+                }
+            }
+        }
+
+        route("user") {
+            post("change_pwd") {
+                try {
+                    val changePasswordRequest = call.receive<PostRequest.ChangePassword>()
+                    usersController.changePassword(changePasswordRequest.token, changePasswordRequest.data)
+                    call.respond(PostResult.Success<Nothing>())
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
                 }
             }
         }

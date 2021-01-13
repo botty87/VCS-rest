@@ -6,9 +6,10 @@ import com.vcs.data.db.UserItem
 import com.vcs.data.dbTables.Users
 import com.vcs.data.http.LoginRequest
 import com.vcs.data.json.LoginResponse
+import com.vcs.data.json.userItems.ChangePasswordItemJson
 import com.vcs.data.json.userItems.EditUserItemJson
 import com.vcs.data.json.userItems.UserPassItemJson
-import com.vcs.exceptions.LoginExceptions
+import com.vcs.exceptions.UserException
 import com.vcs.tools.Crypt
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -28,10 +29,10 @@ class UsersControllerImp: UsersController, KoinComponent {
             UserItem.find {
                 Users.username eq loginRequest.username
             }.firstOrNull()
-        } ?: throw LoginExceptions.UserNotExist()
+        } ?: throw UserException.UserNotExist()
 
         if(!user.active) {
-            throw LoginExceptions.UserNotActive()
+            throw UserException.UserNotActive()
         }
 
         val password = Crypt.decrypt(user.password)
@@ -40,21 +41,32 @@ class UsersControllerImp: UsersController, KoinComponent {
             return LoginResponse(tokensController.create(user).id.value, user.admin)
         }
 
-        throw LoginExceptions.WrongPassword()
+        throw UserException.WrongPassword()
     }
 
-    override fun changePassword(userPassItemJson: UserPassItemJson) {
+    override fun setPassword(userPassItemJson: UserPassItemJson) {
         val password = Crypt.encrypt(userPassItemJson.password)
         transaction {
             UserItem[userPassItemJson.id].password = password
         }
     }
 
+    override fun changePassword(token: String, changePasswordItemJson: ChangePasswordItemJson) {
+        val user = tokensController.getUserForToken(token)
+        val currentPassword = Crypt.decrypt(user.password)
+        if(currentPassword != changePasswordItemJson.oldPassword) {
+            throw UserException.WrongPassword()
+        }
+        transaction {
+            user.password = Crypt.encrypt(changePasswordItemJson.newPassword)
+        }
+    }
+
     override fun getUsers(token: String): List<UserItem> {
-        val userId = tokensController.getUserIdForToken(token)
+        val user = tokensController.getUserForToken(token)
         return transaction {
             UserItem.find {
-                Users.id neq userId
+                Users.id neq user.id.value
             }.orderBy(Users.username to SortOrder.ASC).toList()
         }
     }

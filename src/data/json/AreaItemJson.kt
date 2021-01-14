@@ -14,7 +14,7 @@ class AreaItemJson(
         var calendarMap: Map<Byte, Collection<Int>>,
 ) : AreaItemBase {
     lateinit var trashContainerIds: List<Int>
-    lateinit var adviceIds: List<Int>
+    private lateinit var adviceIds: List<Int>
 
     constructor(areaItem: AreaItem) : this(
         areaItem.id.value,

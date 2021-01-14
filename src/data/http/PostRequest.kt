@@ -1,3 +1,5 @@
+@file:Suppress("LeakingThis")
+
 package com.vcs.data.http
 
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -24,9 +26,9 @@ sealed class PostRequest(val token: String) : KoinComponent {
         override fun checkToken(token: String): TokenCheckResult.Active {
             val tokenResult = super.checkToken(token)
             if(!tokenResult.admin) {
-                throw TokenExceptions.NotAdmin();
+                throw TokenExceptions.NotAdmin()
             }
-            return tokenResult;
+            return tokenResult
         }
     }
     class SetPassword(@JsonProperty("token") token: String, val data: UserPassItemJson) : NoDataAdmin(token)

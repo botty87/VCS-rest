@@ -2,6 +2,7 @@ package com.vcs.data.dbTables
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 
+@Deprecated("Replaced")
 object Areas: IntIdTable() {
     val name = Areas.text("name").uniqueIndex()
     val towns = Areas.text("towns").nullable()

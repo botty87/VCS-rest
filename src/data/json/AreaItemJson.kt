@@ -1,10 +1,11 @@
 package com.vcs.data.json
 
 import com.vcs.data.base.AreaItemBase
+import com.vcs.data.db.AreaItem2
 import data.db.AreaItem
 import org.jetbrains.exposed.sql.transactions.transaction
 
-//TODO check constructor
+@Deprecated("Replaced")
 class AreaItemJson(
         val id: Int,
         override var name: String,
@@ -24,12 +25,24 @@ class AreaItemJson(
         null,
         areaItem.calendarMap
     ) {
-        var pippo : List<Int>;
         transaction {
             depotId = areaItem.depot?.id?.value
             trashContainerIds = areaItem.trashContainers.map { it.id.value }
             adviceIds = areaItem.advices.map { it.id.value }
         }
+    }
+
+    constructor(areaItem2: AreaItem2) : this(
+        areaItem2.id.value,
+        areaItem2.name,
+        areaItem2.towns,
+        areaItem2.separatedMulti,
+        null,
+        emptyMap()
+    ) {
+        depotId = 0
+        trashContainerIds = emptyList()
+        adviceIds = emptyList()
     }
 }
 

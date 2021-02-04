@@ -1,10 +1,15 @@
 package controllers.retires
 
+import com.vcs.controllers.areas2.Areas2Controller
+import com.vcs.data.db.RetireItem2
+import com.vcs.data.json.RetireItem2Json
 import com.vcs.data.json.RetireItemJson
 import data.db.RetireItem
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class RetiresControllerImpl: RetiresController {
+class RetiresControllerImpl: RetiresController, KoinComponent {
 
     override fun getAll(): List<RetireItem> {
         return transaction {
@@ -12,7 +17,21 @@ class RetiresControllerImpl: RetiresController {
         }
     }
 
-    override fun createNew(retireItemJson: RetireItemJson): RetireItem {
+    override fun createNew(retireItemJson: RetireItem2Json, areaId: Int): RetireItem2 {
+        val areas2Controller: Areas2Controller by inject()
+
+        transaction {
+            val retireItem = RetireItem2.new {
+                freq = retireItemJson.freq
+                type = retireItemJson.type
+                startDateTime = retireItemJson.startDateTime
+            }
+            val area = areas2Controller.getArea(areaId, false)
+
+        }
+    }
+
+    /*override fun createNew(retireItemJson: RetireItemJson): RetireItem {
         return transaction {
             RetireItem.new {
                 freq = retireItemJson.freq
@@ -22,7 +41,7 @@ class RetiresControllerImpl: RetiresController {
                 startDate = retireItemJson.startDate
             }
         }
-    }
+    }*/
 
     override fun update(retireItemJson: RetireItemJson): RetireItem {
         return transaction {

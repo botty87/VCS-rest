@@ -2,6 +2,8 @@ package com.vcs.di
 
 import com.vcs.controllers.advices.AdvicesController
 import com.vcs.controllers.advices.AdvicesControllerImpl
+import com.vcs.controllers.areas2.Areas2Controller
+import com.vcs.controllers.areas2.Areas2ControllerImpl
 import com.vcs.controllers.mobileAppVersion.MobileAppVersionController
 import com.vcs.controllers.mobileAppVersion.MobileAppVersionControllerImpl
 import com.vcs.controllers.tokens.TokensController
@@ -29,6 +31,7 @@ val controllersModule = module {
     single<DepotsController> { DepotsControllerImp() }
     single<RetiresController> { RetiresControllerImpl() }
     single<AreasController> { AreasControllerImpl() }
+    single<Areas2Controller> { Areas2ControllerImpl() }
     single<AreasCalendarController> { AreasCalendarControllerImpl() }
     single<TrashContainersController> { TrashContainersControllerImpl() }
     single<AreasTrashContainersController> { AreasTrashContainersControllerImpl() }

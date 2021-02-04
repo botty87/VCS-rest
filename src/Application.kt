@@ -3,6 +3,7 @@ package com.vcs
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.vcs.controllers.advices.AdvicesController
+import com.vcs.controllers.areas2.Areas2Controller
 import com.vcs.controllers.mobileAppVersion.MobileAppVersionController
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
@@ -10,6 +11,7 @@ import com.vcs.data.dbTables.*
 import com.vcs.data.http.LoginRequest
 import com.vcs.data.http.PostRequest
 import com.vcs.data.http.PostResult
+import com.vcs.data.json.AreaItemJson
 import com.vcs.data.json.toJson
 import com.vcs.data.json.userItems.toJson
 import com.vcs.di.controllersModule
@@ -72,6 +74,7 @@ fun Application.module() {
     val retiresController: RetiresController by inject()
     val trashController: TrashContainersController by inject()
     val areasController: AreasController by inject()
+    val areas2Controller: Areas2Controller by inject()
     val areaTrashContainersController: AreasTrashContainersController by inject()
     val usersController: UsersController by inject()
     val advicesController: AdvicesController by inject()
@@ -270,7 +273,7 @@ fun Application.module() {
 
         route("/areas") {
             get {
-                val areas = areasController.getAll().map { it.toJson() }
+                val areas = areas2Controller.getAll().map { AreaItemJson(it) }
                 call.respond(areas)
             }
 
@@ -402,6 +405,27 @@ fun Application.module() {
                 }
             }
         }
+
+        route("areas2") {
+            get {
+                try {
+                    val pippo = areas2Controller.getAll()
+                    val areas = pippo.map { it.toJson() }
+                    call.respond(areas)
+                } catch (e: Throwable) {
+                    call.respond(e.toString())
+                }
+            }
+        }
+
+        get("migrate") {
+            try {
+                areas2Controller.migrate()
+                call.respond("OK")
+            } catch (e: Throwable) {
+                call.respond(e.toString())
+            }
+        }
     }
 }
 
@@ -409,8 +433,8 @@ private fun initDB() {
     val config = HikariConfig("/hikari.properties")
     val ds = HikariDataSource(config)
     Database.connect(ds).useNestedTransactions = true
-    transaction {
-        SchemaUtils.createMissingTablesAndColumns(Areas, Depots, Dictionary, AreasCalendar, AreasTrashContainers,
+    /*transaction {
+        SchemaUtils.createMissingTablesAndColumns(Areas, Areas2, Depots, Dictionary, AreasCalendar, AreasTrashContainers,
                 Retires, TrashContainers, Users, Tokens, Advices, AdvicesAreas, MobileAppVersion)
-    }
+    }*/
 }

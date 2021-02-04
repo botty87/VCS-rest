@@ -13,6 +13,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
+@Deprecated("Replaced by area item 2")
 class AreaItem(id: EntityID<Int>) : IntEntity(id), AreaItemBase, KoinComponent {
     companion object : IntEntityClass<AreaItem>(Areas)
     override var name by Areas.name

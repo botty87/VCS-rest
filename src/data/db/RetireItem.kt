@@ -7,6 +7,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import java.time.LocalDate
 
+@Deprecated("Replaced")
 class RetireItem(id: EntityID<Int>) : IntEntity(id), RetireItemBase {
     companion object : IntEntityClass<RetireItem>(Retires)
     override var freq: Byte by Retires.freq

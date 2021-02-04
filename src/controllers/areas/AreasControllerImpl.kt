@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+@Deprecated("Replaced")
 class AreasControllerImpl: AreasController, KoinComponent {
     private val areasCalendarController: AreasCalendarController by inject()
 

@@ -1,9 +1,9 @@
 package com.vcs.controllers.advices
 
 import com.vcs.data.db.AdviceItem
+import com.vcs.data.db.AreaItem2
 import com.vcs.data.dbTables.Advices
 import com.vcs.data.json.AdviceItemJson
-import data.db.AreaItem
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.KoinComponent
@@ -21,7 +21,7 @@ class AdvicesControllerImpl: AdvicesController, KoinComponent {
                 message = adviceItemJson.message
                 start = adviceItemJson.start
                 end = adviceItemJson.end
-                areas = AreaItem.forIds(adviceItemJson.areas)
+                areas = AreaItem2.forIds(adviceItemJson.areas)
             }
         }
     }
@@ -35,7 +35,7 @@ class AdvicesControllerImpl: AdvicesController, KoinComponent {
             }
         }
         transaction {
-            advice.areas = AreaItem.forIds(adviceItemJson.areas)
+            advice.areas = AreaItem2.forIds(adviceItemJson.areas)
         }
         return advice
     }

@@ -4,6 +4,7 @@ import com.vcs.data.base.RetireItemBase
 import data.db.RetireItem
 import java.time.LocalDate
 
+@Deprecated("Replaced")
 class RetireItemJson(
         var id: Int,
         override var freq: Byte,

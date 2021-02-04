@@ -1,7 +1,6 @@
 package com.vcs.data.base
 
-@Deprecated("Replaced")
-interface AreaItemBase {
+interface AreaItemBase2 {
     var name: String
     var towns: String?
     var separatedMulti: Boolean

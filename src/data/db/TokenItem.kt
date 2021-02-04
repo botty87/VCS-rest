@@ -1,6 +1,5 @@
 package com.vcs.data.db
 
-
 import com.vcs.data.dbTables.Tokens
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass

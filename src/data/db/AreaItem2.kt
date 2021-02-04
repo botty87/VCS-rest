@@ -3,8 +3,8 @@ package com.vcs.data.db
 import com.vcs.data.base.AreaItemBase2
 import com.vcs.data.dbTables.AdvicesAreas
 import com.vcs.data.dbTables.Areas2
-import com.vcs.data.dbTables.AreasRetires
 import com.vcs.data.dbTables.AreasTrashContainers
+import com.vcs.data.dbTables.Retires2
 import data.db.DepotItem
 import data.db.TrashContainerItem
 import org.jetbrains.exposed.dao.IntEntity
@@ -19,5 +19,5 @@ class AreaItem2(id: EntityID<Int>) : IntEntity(id), AreaItemBase2 {
     var depot by DepotItem optionalReferencedOn Areas2.depot
     var trashContainers by TrashContainerItem via AreasTrashContainers
     var advices by AdviceItem via AdvicesAreas
-    var retires by RetireItem2 via AreasRetires
+    val retires by RetireItem2 referrersOn Retires2.area
 }

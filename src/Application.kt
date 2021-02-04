@@ -177,20 +177,8 @@ fun Application.module() {
             route("new") {
                 post {
                     try {
-                        val request = call.receive<PostRequest.RetireItemJson>()
+                        val request = call.receive<PostRequest.RetireItem2Json>()
                         val retireItem = retiresController.createNew(request.data)
-                        call.respond(PostResult.Success(retireItem.toJson()))
-                    } catch (e: Throwable) {
-                        call.respond(PostResult.Error(e.localizedMessage))
-                    }
-                }
-            }
-
-            route("update") {
-                post {
-                    try {
-                        val request = call.receive<PostRequest.RetireItemJson>()
-                        val retireItem = retiresController.update(request.data)
                         call.respond(PostResult.Success(retireItem.toJson()))
                     } catch (e: Throwable) {
                         call.respond(PostResult.Error(e.localizedMessage))

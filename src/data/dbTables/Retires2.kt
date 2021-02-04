@@ -7,4 +7,5 @@ object Retires2: IntIdTable() {
     val freq = byte("freq")
     val type = byte("type")
     val startDateTime = datetime("startDateTime")
+    val area = reference("area", Areas2)
 }

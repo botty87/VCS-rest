@@ -11,7 +11,8 @@ class RetireItemJson(
         override var startDate: LocalDate?,
         override var time: Byte,
         override var type: Byte,
-        override var name: String)  : RetireItemBase {
+        override var name: String
+        )  : RetireItemBase {
 
     constructor(retireItem: RetireItem) : this(
             retireItem.id.value,

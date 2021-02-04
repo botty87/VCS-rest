@@ -44,7 +44,7 @@ class Areas2ControllerImpl: Areas2Controller, KoinComponent {
             }
             SchemaUtils.createMissingTablesAndColumns(
                 Areas, Areas2, Depots, AreasCalendar,
-                AreasTrashContainers, Retires, TrashContainers, Advices, AdvicesAreas, AreasRetires, Retires2
+                AreasTrashContainers, Retires, TrashContainers, Advices, AdvicesAreas, Retires2
             )
         }
     }

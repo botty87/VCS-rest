@@ -11,4 +11,5 @@ class RetireItem2(id: EntityID<Int>) : IntEntity(id), RetireItemBase2 {
     override var freq by Retires2.freq
     override var type by Retires2.type
     override var startDateTime by Retires2.startDateTime
+    var area by AreaItem2 referencedOn Retires2.area
 }

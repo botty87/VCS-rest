@@ -7,7 +7,7 @@ import data.db.RetireItem
 
 interface RetiresController {
     fun getAll(): List<RetireItem>
-    fun createNew(retireItemJson: RetireItem2Json, areaId: Int): RetireItem2
+    fun createNew(retireItemJson: RetireItem2Json): RetireItem2
     fun update(retireItemJson: RetireItemJson): RetireItem
     fun delete(retireItemJson: RetireItemJson)
 }

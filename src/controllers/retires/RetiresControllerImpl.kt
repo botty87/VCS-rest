@@ -17,31 +17,19 @@ class RetiresControllerImpl: RetiresController, KoinComponent {
         }
     }
 
-    override fun createNew(retireItemJson: RetireItem2Json, areaId: Int): RetireItem2 {
+    override fun createNew(retireItemJson: RetireItem2Json): RetireItem2 {
         val areas2Controller: Areas2Controller by inject()
 
-        transaction {
-            val retireItem = RetireItem2.new {
+        return transaction {
+            val area = areas2Controller.getArea(retireItemJson.areaId!!, false)
+            RetireItem2.new {
                 freq = retireItemJson.freq
                 type = retireItemJson.type
                 startDateTime = retireItemJson.startDateTime
+                this.area = area
             }
-            val area = areas2Controller.getArea(areaId, false)
-
         }
     }
-
-    /*override fun createNew(retireItemJson: RetireItemJson): RetireItem {
-        return transaction {
-            RetireItem.new {
-                freq = retireItemJson.freq
-                time = retireItemJson.time
-                type = retireItemJson.type
-                name = retireItemJson.name
-                startDate = retireItemJson.startDate
-            }
-        }
-    }*/
 
     override fun update(retireItemJson: RetireItemJson): RetireItem {
         return transaction {

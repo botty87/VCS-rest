@@ -8,7 +8,9 @@ class RetireItem2Json(
     var id: Int,
     override var type: Byte,
     override var freq: Byte,
-    override var startDateTime: LocalDateTime) : RetireItemBase2 {
+    override var startDateTime: LocalDateTime,
+    val areaId: Int? = null
+) : RetireItemBase2 {
 
         constructor(retireItem: RetireItem2) : this(
             retireItem.id.value,

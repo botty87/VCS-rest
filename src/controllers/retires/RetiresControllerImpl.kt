@@ -2,9 +2,10 @@ package controllers.retires
 
 import com.vcs.controllers.areas2.Areas2Controller
 import com.vcs.data.db.RetireItem2
+import com.vcs.data.dbTables.Retires2
 import com.vcs.data.json.RetireItem2Json
-import com.vcs.data.json.RetireItemJson
 import data.db.RetireItem
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -31,21 +32,9 @@ class RetiresControllerImpl: RetiresController, KoinComponent {
         }
     }
 
-    override fun update(retireItemJson: RetireItemJson): RetireItem {
-        return transaction {
-            RetireItem[retireItemJson.id].apply {
-                freq = retireItemJson.freq
-                time = retireItemJson.time
-                type = retireItemJson.type
-                name = retireItemJson.name
-                startDate = retireItemJson.startDate
-            }
-        }
-    }
-
-    override fun delete(retireItemJson: RetireItemJson) {
+    override fun delete(retireItemId: Int) {
         transaction {
-            RetireItem[retireItemJson.id].delete()
+            Retires2.deleteWhere { Retires2.id eq retireItemId }
         }
     }
 }

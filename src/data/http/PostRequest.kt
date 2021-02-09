@@ -22,6 +22,7 @@ sealed class PostRequest(val token: String) : KoinComponent {
     class TrashContainerJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.TrashContainerJson) : PostRequest(token)
     class AdviceItemJson(@JsonProperty("token") token: String, val data: com.vcs.data.json.AdviceItemJson) : PostRequest(token)
     class ChangePassword(@JsonProperty("token") token: String, val data: ChangePasswordItemJson) : PostRequest(token)
+    class ItemId(@JsonProperty("token") token: String, val data: Int) : PostRequest(token)
 
     //ADMIN REQUESTS
     open class NoDataAdmin(@JsonProperty("token") token: String) : PostRequest(token) {

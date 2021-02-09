@@ -20,6 +20,7 @@ import com.zaxxer.hikari.HikariDataSource
 import controllers.areas.AreasController
 import controllers.depots.DepotsController
 import controllers.dictionary.DictionaryController
+import controllers.referencedTables.areasCalendar.AreasCalendarController
 import controllers.referencedTables.areasTrashContainers.AreasTrashContainersController
 import controllers.retires.RetiresController
 import io.ktor.application.*
@@ -79,6 +80,7 @@ fun Application.module() {
     val usersController: UsersController by inject()
     val advicesController: AdvicesController by inject()
     val mobileAppVersionController: MobileAppVersionController by inject()
+    val areasCalendarController: AreasCalendarController by inject()
 
     routing {
         get("/init") {
@@ -189,7 +191,7 @@ fun Application.module() {
             route("delete") {
                 post {
                     try {
-                        val request = call.receive<PostRequest.RetireItemJson>()
+                        val request = call.receive<PostRequest.ItemId>()
                         retiresController.delete(request.data)
                         call.respond(PostResult.Success<Nothing>())
                     } catch (e: Throwable) {
@@ -261,8 +263,12 @@ fun Application.module() {
 
         route("/areas") {
             get {
-                val areas = areas2Controller.getAll().map { AreaItemJson(it) }
-                call.respond(areas)
+                try {
+                    val areas = areas2Controller.getAll().map { AreaItemJson(it, areasCalendarController) }
+                    call.respond(areas)
+                } catch (e: Throwable) {
+                    call.respond(e.localizedMessage)
+                }
             }
 
             post("update") {

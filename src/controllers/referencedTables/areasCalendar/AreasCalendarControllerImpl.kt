@@ -40,11 +40,11 @@ class AreasCalendarControllerImpl: AreasCalendarController {
         }
     }
 
-    override fun getRetiresForArea(areaItem: AreaItem): Multimap<Byte, Int> {
+    override fun getRetiresForArea(areaId: Int): Multimap<Byte, Int> {
         val calendarMap: Multimap<Byte, Int> = ArrayListMultimap.create()
         transaction {
             AreaCalendarItem.find {
-                AreasCalendar.area eq areaItem.id
+                AreasCalendar.area eq areaId
             }.forEach { areaCalendar ->
                 calendarMap.put(areaCalendar.weekDay, areaCalendar.retire.id.value)
             }

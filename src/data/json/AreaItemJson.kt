@@ -2,6 +2,7 @@ package com.vcs.data.json
 
 import com.vcs.data.base.AreaItemBase
 import com.vcs.data.db.AreaItem2
+import controllers.referencedTables.areasCalendar.AreasCalendarController
 import data.db.AreaItem
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -32,7 +33,7 @@ class AreaItemJson(
         }
     }
 
-    constructor(areaItem2: AreaItem2) : this(
+    constructor(areaItem2: AreaItem2, areasCalendarController: AreasCalendarController) : this(
         areaItem2.id.value,
         areaItem2.name,
         areaItem2.towns,
@@ -40,9 +41,12 @@ class AreaItemJson(
         null,
         emptyMap()
     ) {
-        depotId = 0
-        trashContainerIds = emptyList()
-        adviceIds = emptyList()
+        transaction {
+            depotId = areaItem2.depot?.id?.value
+            trashContainerIds = areaItem2.trashContainers.map { it.id.value }
+            adviceIds = areaItem2.advices.map { it.id.value }
+            calendarMap = areasCalendarController.getRetiresForArea(areaItem2.id.value).asMap()
+        }
     }
 }
 

@@ -26,6 +26,6 @@ class AreaItem(id: EntityID<Int>) : IntEntity(id), AreaItemBase, KoinComponent {
     val calendarMap: Map<Byte, Collection<Int>>
         get() = transaction {
             val areasCalendarController: AreasCalendarController = get()
-            areasCalendarController.getRetiresForArea(this@AreaItem).asMap()
+            areasCalendarController.getRetiresForArea(this@AreaItem.id.value).asMap()
         }
 }

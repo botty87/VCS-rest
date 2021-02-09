@@ -1,9 +1,11 @@
 package com.vcs.data.json
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.vcs.data.base.RetireItemBase2
 import com.vcs.data.db.RetireItem2
 import java.time.LocalDateTime
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class RetireItem2Json(
     var id: Int,
     override var type: Byte,

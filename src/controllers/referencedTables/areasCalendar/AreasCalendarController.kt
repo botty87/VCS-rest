@@ -7,5 +7,5 @@ import data.db.RetireItem
 interface AreasCalendarController {
     fun setAreaRetires(areaItem: AreaItem, retires: Map<Byte, Collection<Int>>)
     fun addNew(areaItem: AreaItem, retireItem: RetireItem, weekDayString: String)
-    fun getRetiresForArea(areaItem: AreaItem): Multimap<Byte, Int>
+    fun getRetiresForArea(areaId: Int): Multimap<Byte, Int>
 }

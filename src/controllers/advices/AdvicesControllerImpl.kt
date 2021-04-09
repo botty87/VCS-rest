@@ -7,11 +7,21 @@ import com.vcs.data.json.AdviceItemJson
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.core.KoinComponent
+import java.time.LocalDate
 
 class AdvicesControllerImpl: AdvicesController, KoinComponent {
     override fun getAll(): List<AdviceItem> {
         return transaction {
-            AdviceItem.all().toList()
+            val advices = AdviceItem.all().toMutableList()
+            val now = LocalDate.now()
+            advices.removeIf {
+                val remove = it.end.isBefore(now)
+                if(remove) {
+                    it.delete()
+                }
+                remove
+            }
+            advices
         }
     }
 
@@ -37,6 +47,7 @@ class AdvicesControllerImpl: AdvicesController, KoinComponent {
         transaction {
             advice.areas = AreaItem2.forIds(adviceItemJson.areas)
         }
+
         return advice
     }
 

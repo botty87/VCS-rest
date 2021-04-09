@@ -1,9 +1,11 @@
 package com.vcs.data.json
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.vcs.data.base.AreaItemBase2
 import com.vcs.data.db.AreaItem2
 import org.jetbrains.exposed.sql.transactions.transaction
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class AreaItem2Json(
     val id: Int,
     override var name: String,
@@ -13,7 +15,7 @@ class AreaItem2Json(
 ): AreaItemBase2 {
     lateinit var trashContainerIds: List<Int>
     lateinit var adviceIds: List<Int>
-    lateinit var retires: List<RetireItem2Json>
+    lateinit var retires: List<RetireItemInterruptionJson>
 
     constructor(areaItem: AreaItem2) : this(
         areaItem.id.value,

@@ -4,6 +4,7 @@ import com.vcs.data.dbTables.Dictionary
 import com.vcs.data.json.DictionaryItemJson
 import data.db.DictionaryItem
 import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class DictionaryControllerImpl: DictionaryController {
@@ -42,7 +43,7 @@ class DictionaryControllerImpl: DictionaryController {
 
     override fun delete(dictionaryItemJson: DictionaryItemJson) {
         transaction {
-            DictionaryItem[dictionaryItemJson.id].delete()
+            Dictionary.deleteWhere { Dictionary.id eq dictionaryItemJson.id }
         }
     }
 }

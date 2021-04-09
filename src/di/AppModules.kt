@@ -4,8 +4,12 @@ import com.vcs.controllers.advices.AdvicesController
 import com.vcs.controllers.advices.AdvicesControllerImpl
 import com.vcs.controllers.areas2.Areas2Controller
 import com.vcs.controllers.areas2.Areas2ControllerImpl
+import com.vcs.controllers.interruptions.InterruptionsController
+import com.vcs.controllers.interruptions.InterruptionsControllerImpl
 import com.vcs.controllers.mobileAppVersion.MobileAppVersionController
 import com.vcs.controllers.mobileAppVersion.MobileAppVersionControllerImpl
+import com.vcs.controllers.referencedTables.interruptionRetires.InterruptionRetiresController
+import com.vcs.controllers.referencedTables.interruptionRetires.InterruptionRetiresControllerImpl
 import com.vcs.controllers.tokens.TokensController
 import com.vcs.controllers.tokens.TokensControllerImpl
 import com.vcs.controllers.trashContainers.TrashContainersController
@@ -39,4 +43,6 @@ val controllersModule = module {
     single<UsersController> { UsersControllerImp() }
     single<AdvicesController> { AdvicesControllerImpl() }
     single<MobileAppVersionController> { MobileAppVersionControllerImpl() }
+    single<InterruptionsController> { InterruptionsControllerImpl() }
+    single< InterruptionRetiresController> { InterruptionRetiresControllerImpl() }
 }

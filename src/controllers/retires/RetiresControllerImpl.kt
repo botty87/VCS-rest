@@ -1,6 +1,8 @@
 package controllers.retires
 
 import com.vcs.controllers.areas2.Areas2Controller
+import com.vcs.controllers.interruptions.InterruptionsController
+import com.vcs.controllers.referencedTables.interruptionRetires.InterruptionRetiresController
 import com.vcs.data.db.RetireItem2
 import com.vcs.data.dbTables.Retires2
 import com.vcs.data.json.RetireItem2Json
@@ -15,6 +17,14 @@ class RetiresControllerImpl: RetiresController, KoinComponent {
     override fun getAll(): List<RetireItem> {
         return transaction {
             RetireItem.all().toList()
+        }
+    }
+
+    override fun getRetire(id: Int, requireTransaction: Boolean): RetireItem2 {
+        return if(requireTransaction) {
+            transaction { RetireItem2[id] }
+        } else {
+            RetireItem2[id]
         }
     }
 
@@ -33,8 +43,17 @@ class RetiresControllerImpl: RetiresController, KoinComponent {
     }
 
     override fun delete(retireItemId: Int) {
+        val interruptionRetiresController: InterruptionRetiresController by inject()
+        val interruptionsController: InterruptionsController by inject()
+
         transaction {
+            val interruptionIds = interruptionRetiresController.getInterruptionIdsForRetire(retireItemId)
             Retires2.deleteWhere { Retires2.id eq retireItemId }
+            interruptionIds.forEach { interruptionId ->
+                if(!interruptionRetiresController.containInterruptionId(interruptionId)) {
+                    interruptionsController.delete(interruptionId.value, false)
+                }
+            }
         }
     }
 }

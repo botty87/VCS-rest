@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.vcs.controllers.advices.AdvicesController
 import com.vcs.controllers.areas2.Areas2Controller
+import com.vcs.controllers.interruptions.InterruptionsController
 import com.vcs.controllers.mobileAppVersion.MobileAppVersionController
 import com.vcs.controllers.trashContainers.TrashContainersController
 import com.vcs.controllers.users.UsersController
-import com.vcs.data.dbTables.*
+import com.vcs.data.dbTables.InterruptionRetires
+import com.vcs.data.dbTables.Interruptions
 import com.vcs.data.http.LoginRequest
 import com.vcs.data.http.PostRequest
 import com.vcs.data.http.PostResult
@@ -81,15 +83,9 @@ fun Application.module() {
     val advicesController: AdvicesController by inject()
     val mobileAppVersionController: MobileAppVersionController by inject()
     val areasCalendarController: AreasCalendarController by inject()
+    val interruptionsController: InterruptionsController by inject()
 
     routing {
-        get("/init") {
-            transaction {
-                SchemaUtils.create(Dictionary, Depots, Retires, Areas, AreasCalendar, TrashContainers, AreasTrashContainers)
-            }
-            call.respondText("Tables created")
-        }
-
         route("/dictionary") {
             get {
                 val dictionary = dictionaryController.getAll().map { it.toJson() }
@@ -403,11 +399,40 @@ fun Application.module() {
         route("areas2") {
             get {
                 try {
-                    val pippo = areas2Controller.getAll()
-                    val areas = pippo.map { it.toJson() }
+                    val areas = areas2Controller.getAll().map { it.toJson() }
                     call.respond(areas)
                 } catch (e: Throwable) {
                     call.respond(e.toString())
+                }
+            }
+        }
+
+        route("interruptions") {
+            get {
+                try {
+                    val interruptions = interruptionsController.getAll().map { it.toJson() }
+                    call.respond(interruptions)
+                } catch (e: Throwable) {
+                    call.respond(e.toString())
+                }
+            }
+            post("add") {
+                try {
+                    val interruptionRequest = call.receive<PostRequest.NewInterruptionItemJson>()
+                    val interruption = interruptionsController.add(interruptionRequest.data)
+                    call.respond(PostResult.Success(interruption.toJson()))
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
+                }
+            }
+
+            post("delete") {
+                try {
+                    val interruptionRequest = call.receive<PostRequest.InterruptionItemJson>()
+                    interruptionsController.delete(interruptionRequest.data.id)
+                    call.respond(PostResult.Success<Nothing>())
+                } catch (e: Throwable) {
+                    call.respond(PostResult.Error(e.localizedMessage))
                 }
             }
         }
@@ -427,6 +452,9 @@ private fun initDB() {
     val config = HikariConfig("/hikari.properties")
     val ds = HikariDataSource(config)
     Database.connect(ds).useNestedTransactions = true
+    transaction {
+        SchemaUtils.createMissingTablesAndColumns(Interruptions, InterruptionRetires)
+    }
     /*transaction {
         SchemaUtils.createMissingTablesAndColumns(Areas, Areas2, Depots, Dictionary, AreasCalendar, AreasTrashContainers,
                 Retires, TrashContainers, Users, Tokens, Advices, AdvicesAreas, MobileAppVersion)

@@ -1,6 +1,7 @@
 package com.vcs.data.db
 
 import com.vcs.data.base.RetireItemBase2
+import com.vcs.data.dbTables.InterruptionRetires
 import com.vcs.data.dbTables.Retires2
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -12,4 +13,5 @@ class RetireItem2(id: EntityID<Int>) : IntEntity(id), RetireItemBase2 {
     override var type by Retires2.type
     override var startDateTime by Retires2.startDateTime
     var area by AreaItem2 referencedOn Retires2.area
+    var interruptions by InterruptionItem via InterruptionRetires
 }

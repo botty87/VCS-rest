@@ -48,6 +48,7 @@ dependencies {
             "org.apache.tomcat.embed:tomcat-embed-jasper:$tomcat_version"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "io.ktor:ktor-server-servlet:$ktor_version"
     implementation "io.ktor:ktor-html-builder:$ktor_version"
 

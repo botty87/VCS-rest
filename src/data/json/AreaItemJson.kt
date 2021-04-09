@@ -45,7 +45,7 @@ class AreaItemJson(
             depotId = areaItem2.depot?.id?.value
             trashContainerIds = areaItem2.trashContainers.map { it.id.value }
             adviceIds = areaItem2.advices.map { it.id.value }
-            calendarMap = areasCalendarController.getRetiresForArea(areaItem2.id.value).asMap()
+            calendarMap = areasCalendarController.getRetiresIdsForArea(areaItem2.id.value).asMap()
         }
     }
 }
